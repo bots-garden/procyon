@@ -1,0 +1,18 @@
+{
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.disableMonospaceOptimizations": true,
+  "editor.fontSize": 15,
+   "workbench.colorTheme": "Default Light+",
+  "go.goroot": "/home/gitpod/.gvm/gos/go1.17.5",
+  "go.gopath": "/home/gitpod/.gvm/pkgsets/go1.17.5/global",
+  "gopls": {
+    "experimentalWorkspaceModule": true,
+  },
+  "go.toolsEnvVars": {
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+  },
+  "go.useLanguageServer": true,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "task.autoDetect": "on",
+}

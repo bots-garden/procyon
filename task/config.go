@@ -12,12 +12,11 @@ type ExecutorType int
 // ??? or use interface
 const (
 	Unknown ExecutorType = iota
-	Galago
 	Sat
+	Galago
 )
 
 type Config struct {
-	//Name                 string // "hello-function-config"
 	Executor             ExecutorType
 	ExecutorPath         string // "./galago-wasm-runner/galago-runner"
 	WasmFileName         string // "hello.wasm"
@@ -37,6 +36,7 @@ func (config *Config) Initialize(settings settings.Settings) ExecutorType {
 
 	config.Args = append(config.Args, config.ExecutorPath)
 
+	// This kinf of executor does not exist right now
 	if config.Executor == Galago {
 
 		config.WasmFilePath = settings.Functions.WasmFilesDirectory + "/" + config.WasmFileName

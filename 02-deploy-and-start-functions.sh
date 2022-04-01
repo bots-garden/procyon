@@ -3,7 +3,7 @@
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hello.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
       "functionName": "hello",
@@ -16,7 +16,7 @@ curl -v --request POST \
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hey.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hey.wasm",
       "functionName": "hey",
@@ -30,7 +30,7 @@ curl -v --request POST \
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hi.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hi.wasm",
       "functionName": "hi",
@@ -43,7 +43,7 @@ curl -v --request POST \
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "yo.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/yo.wasm",
       "functionName": "yo",
@@ -56,7 +56,7 @@ curl -v --request POST \
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hello.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
       "functionName": "hello",
@@ -68,7 +68,7 @@ curl -v --request POST \
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hello.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
       "functionName": "hello",

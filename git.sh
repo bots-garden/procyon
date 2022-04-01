@@ -37,4 +37,8 @@ if [[ "$1" == "docker" ]]; then
   message="🐳 docker $2"
 fi
 
+if [[ "$1" == "release" ]]; then
+  message="📦 release $2"
+fi
+
 git add .; git commit -m "${message}"; git push

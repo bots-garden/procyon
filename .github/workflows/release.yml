@@ -23,7 +23,7 @@ jobs:
           project_path: "./"
           binary_name: "procyon"
           ldflags: "-s -w"
-          extra_files: LICENSE README.txt procyon.json ./sample/hello/hello.wasm
+          extra_files: LICENSE README.txt procyon.json ./samples/hello/hello.wasm
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -29,15 +29,31 @@ tasks:
       ./generate.sh
       cd ../..
 
+      # ------------------------------------
+      # Build Alcor Reverse-Proxy
+      # ------------------------------------
+      cd alcor-reverse-proxy
+      go build
+
+      cd certs
+      ./generate.sh
+      cd ../..
+
+      # ------------------------------------
+      # Build Procyon
+      # ------------------------------------
+      go build
+
+
+
 ports:
+    # Alcor reverse proxy 
   - port: 8080
     visibility: public
-  - port: 8888
-    visibility: public
-  - port: 3000
-    visibility: public
+    # Procyon
   - port: 9090
     visibility: public
+    # Venusia Registry
   - port: 9999
     visibility: public
 

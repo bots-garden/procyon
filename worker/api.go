@@ -94,6 +94,65 @@ func (a *Api) GetTasksListHandler(responseWriter http.ResponseWriter, request *h
 	json.NewEncoder(responseWriter).Encode(a.Worker.TasksDb) // todo: format
 }
 
+type FunctionRecord struct {
+	WasmFunctionHttpPort int
+	TaskId uuid.UUID
+}
+
+/* This method/route is called by alcor (reverse proxy)
+
+{
+    "hello-*": {
+        "TaskId": "536d4475-7e22-4437-991a-740a8aef290d",
+        "WasmFunctionHttpPort": 3000
+    },
+    "hello-first": {
+        "TaskId": "536d4475-7e22-4437-991a-740a8aef290d",
+        "WasmFunctionHttpPort": 3000
+    },
+    "hello-orange": {
+        "TaskId": "d9dd4be8-a377-4a6f-b87f-7e74cebd9483",
+        "WasmFunctionHttpPort": 3004
+    "hey-*": {
+        "TaskId": "2990d84b-2832-46b9-8c97-c5e39928da96",
+        "WasmFunctionHttpPort": 3001
+    },
+    "hey-first": {
+        "TaskId": "2990d84b-2832-46b9-8c97-c5e39928da96",
+        "WasmFunctionHttpPort": 3001
+    }
+}
+*/
+func (a *Api) GetFunctionsListHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
+	responseWriter.WriteHeader(200)
+
+	var functionsMap map[string]FunctionRecord
+	functionsMap = make(map[string]FunctionRecord)
+
+	// parse map
+	for key, element := range a.Worker.TasksDb {
+
+		functionsMap[element.Config.FunctionName+"-"+element.Config.FunctionRevision] = FunctionRecord{
+			WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
+			TaskId: key,
+		}
+
+		// TODO: add route to change the default revision
+
+		// !!! add the default revision to the map
+		if element.Config.DefaultRevision == true {
+			functionsMap[element.Config.FunctionName+"-"+"*"] = FunctionRecord{
+				WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
+				TaskId: key,
+			}
+		}
+
+	}
+
+	json.NewEncoder(responseWriter).Encode(functionsMap)
+}
+
 func (a *Api) StopTaskHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	taskId := chi.URLParam(request, "taskID")
 	if taskId == "" {
@@ -130,6 +189,9 @@ func (a *Api) InitRouter() {
 		r.Route("/{taskID}", func(r chi.Router) {
 			r.Delete("/", a.StopTaskHandler)
 		})
+	})
+	a.Router.Route("/functions", func(r chi.Router) {
+		r.Get("/", a.GetFunctionsListHandler)
 	})
 }
 

@@ -7,7 +7,7 @@ curl -v --request POST \
       "wasmFileName": "hello.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
       "functionName": "hello",
-      "functionRevision": "",
+      "functionRevision": "first",
       "defaultRevision": true
     }
   ' http://localhost:9090/tasks
@@ -20,7 +20,7 @@ curl -v --request POST \
       "wasmFileName": "hey.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hey.wasm",
       "functionName": "hey",
-      "functionRevision": "",
+      "functionRevision": "first",
       "defaultRevision": true
     }
   ' http://localhost:9090/tasks
@@ -34,7 +34,7 @@ curl -v --request POST \
       "wasmFileName": "hi.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/hi.wasm",
       "functionName": "hi",
-      "functionRevision": "",
+      "functionRevision": "first",
       "defaultRevision": true
     }
   ' http://localhost:9090/tasks
@@ -47,7 +47,32 @@ curl -v --request POST \
       "wasmFileName": "yo.wasm",
       "wasmRegistryUrl": "https://localhost:9999/wasm/download/yo.wasm",
       "functionName": "yo",
-      "functionRevision": "",
+      "functionRevision": "first",
       "defaultRevision": true
+    }
+  ' http://localhost:9090/tasks
+
+
+curl -v --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "executor": 2,
+      "wasmFileName": "hello.wasm",
+      "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
+      "functionName": "hello",
+      "functionRevision": "orange",
+      "defaultRevision": false
+    }
+  ' http://localhost:9090/tasks
+
+curl -v --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "executor": 2,
+      "wasmFileName": "hello.wasm",
+      "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
+      "functionName": "hello",
+      "functionRevision": "red",
+      "defaultRevision": false
     }
   ' http://localhost:9090/tasks

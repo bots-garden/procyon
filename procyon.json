@@ -1,7 +1,7 @@
 {
   "executors": {
-    "galagoExecutorPath": "./galago-executor/galago-executor",
-    "satExecutorPath": "./executors/sat"
+    "satExecutorPath": "./executors/sat",
+    "galagoExecutorPath": "./galago-executor/galago-executor"
   },  
   "functions": {
     "wasmFilesDirectory": "./functions"

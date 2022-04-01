@@ -7,30 +7,21 @@ import (
 	"os"
 )
 
+// see procyon.json
 type Settings struct {
 	Executors struct {
-		GalagoExecutorPath string `json:"galagoExecutorPath"`
 		SatExecutorPath    string `json:"satExecutorPath"`
+		GalagoExecutorPath string `json:"galagoExecutorPath"` // for another executor than Sat
 	} `json:"executors"`
 	Functions struct {
-		WasmFilesDirectory string `json:"wasmFilesDirectory"`
+		WasmFilesDirectory string `json:"wasmFilesDirectory"` // not used by Sat
 	} `json:"functions"`
 	Http struct {
-		Start int `json:"start"`
+		Start int `json:"start"` // Procyon use this number for every wasm service (it is incremented at every launch)
 	}
 }
-/*
-{
-  "executors": {
-    "galagoExecutorPath": "./galago-wasm-runner/galago-runner",
-    "satExecutorPath": "./runners/sat"
-  },
-  "functions": {
-    "wasmFilePath": "./functions"
-  }
-}
-*/
 
+// Read settings of Procyon (in `./procyon.json`)
 func GetSettings() Settings {
 	settingsFile, err := ioutil.ReadFile("./procyon.json")
 	if err != nil {

@@ -6,7 +6,7 @@ on:
 
 jobs:
   releases-matrix:
-    name: Release Go Binary
+    name: Release Procyon Binaries
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,4 +23,22 @@ jobs:
           project_path: "./"
           binary_name: "procyon"
           ldflags: "-s -w"
-          extra_files: LICENSE README.md
+          extra_files: LICENSE README.txt procyon.json sample/hello/hello.wasm
+      - uses: wangyoucao577/go-release-action@v1.16
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          project_path: "./alcor-reverse-proxy"
+          binary_name: "alcor"
+          ldflags: "-s -w"
+          extra_files: LICENSE README.txt alcor.json
+      - uses: wangyoucao577/go-release-action@v1.16
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          project_path: "./venusia-registry"
+          binary_name: "venusia"
+          ldflags: "-s -w"
+          extra_files: LICENSE README.txt

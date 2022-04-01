@@ -1,3 +1,3 @@
 #!/bin/bash
-cd venusia
+cd venusia-registry
 ./venusia

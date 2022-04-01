@@ -68,10 +68,8 @@ func (worker *Worker) RunTask() task.WasmRunnerResult {
 
 /*
 - Update the StartTime field on the task t.
-- Create an instance of the Docker struct to talk to the Docker daemon.
-- Call the Run() method on the Docker struct.
+- Call the Run() method on the Worker struct.
 - Check if there were any errors in starting the task.
-- Add the running container’s ID to the tasks t.Runtime.ContainerId field.
 - Save the updated task t to the worker’s Db field.
 - Return the result of the operation.
 */
@@ -97,8 +95,7 @@ func (worker *Worker) StartTask(t *task.Task) task.WasmRunnerResult {
 }
 
 /*
-- Create an instance of the Docker struct that allows us to talk to the Docker daemon using the Docker SDK.
-- Call the Stop() method on the Docker struct.
+- Call the Stop() method on the Worker struct.
 - Check if there were any errors in stopping the task.
 - Update the FinishTime field on the task t.
 - Save the updated task t to the worker’s Db field.

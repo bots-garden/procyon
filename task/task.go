@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	//"gitlab.com/k33g/galago-o/osmetrics"
 	"github.com/struCoder/pidusage"
 )
 
@@ -21,11 +20,9 @@ type Task struct {
 	FinishTime    time.Time
 	CPU           float64
 	Memory        float64
-	// RunnerId      uuid.UUID //!!! not necessary or do a getter
-	// RestartPolicy
 }
 
-//TODO: get the size of the wasm file (for that query the registry)
+// TODO: get the size of the wasm file (for that query the registry)
 // -> "WasmRegistryUrl": "https://localhost:9999/hi/hi.wasm"
 // -> add some routes(api) to the registry
 

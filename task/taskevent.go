@@ -8,7 +8,7 @@ import (
 
 type TaskEvent struct {
 	Id                   uuid.UUID
-	Executor             ExecutorType // 1: galago 2: sat
+	Executor             ExecutorType // 1: sat 2: galago (other kind of runner)
 	WasmFileName         string
 	WasmFunctionHttpPort int
 	WasmRegistryUrl      string
@@ -16,20 +16,4 @@ type TaskEvent struct {
 	FunctionRevision     string
 	DefaultRevision      bool
 	Timestamp            time.Time // record the time the event was requested
-	//Task      Task
-	//State     State
 }
-
-/*
-```json
-{
-  "executor": 1,
-  "wasmFileName": "hello.wasm",
-	"functionName": "hello",
-	"functionRevision": "default",
-
-  "wasmFunctionHttpPort": 8082,
-  "wasmRegistryUrl": "https://localhost:9999/hello/hello.wasm"
-}
-```
-*/

@@ -31,12 +31,15 @@ var currentHttpPort = settings.GetSettings().Http.Start
 curl -v --request POST \
   --header 'Content-Type: application/json' \
   --data '{
-      "executor": 2,
+      "executor": 1,
       "wasmFileName": "hello.wasm",
-      "wasmFunctionHttpPort": 8081,
-      "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm"
+      "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm",
+      "functionName": "hello",
+      "functionRevision": "first",
+      "defaultRevision": true
     }
   ' http://localhost:9090/tasks
+
 */
 func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	
@@ -55,7 +58,9 @@ func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.R
 		json.NewEncoder(responseWriter).Encode(e)
 		return
 	}
+
 	// TODO: save the data of the function in a shared place (for alcor)
+	// !!! Right now I use an http service
 
 	functionConfig := task.Config{
 		Executor: taskEvent.Executor,
@@ -68,7 +73,9 @@ func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.R
 		DefaultRevision: taskEvent.DefaultRevision,
 
 	}
+
 	// TODO: make a table of available ports
+	// to handle the deletion of a function
 	currentHttpPort+=1
 
 	functionConfig.Initialize(a.Settings)
@@ -140,7 +147,6 @@ func (a *Api) GetFunctionsListHandler(responseWriter http.ResponseWriter, reques
 
 		// TODO: add route to change the default revision
 
-		// !!! add the default revision to the map
 		if element.Config.DefaultRevision == true {
 			functionsMap[element.Config.FunctionName+"-"+"*"] = FunctionRecord{
 				WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
@@ -171,7 +177,6 @@ func (a *Api) StopTaskHandler(responseWriter http.ResponseWriter, request *http.
 	taskCopy := *taskToStop
 	taskCopy.ChangeState(task.Completed)
 	
-
 	log.Println("💢 added task:", taskToStop.Id, "to stop runner:", taskToStop.WasmRunner.RunnerId)
 
 	a.Worker.AddTask(&taskCopy)

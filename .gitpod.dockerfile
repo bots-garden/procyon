@@ -10,7 +10,7 @@ ARG WABT_VERSION="1.0.24"
 
 USER gitpod
 
-RUN sudo apt install libncurses5 libxkbcommon0 libtinfo5 -y
+RUN sudo apt install libncurses5 libxkbcommon0 libtinfo5 libnss3-tools -y
 
 # GoLang
 RUN curl -sL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer| bash
@@ -37,7 +37,8 @@ RUN brew install httpie && \
     brew install hey && \
     brew install bat && \
     brew install exa && \
-    brew install llvm
+    brew install llvm && \
+    brew install mkcert
 
 RUN wget https://github.com/WebAssembly/wabt/releases/download/${WABT_VERSION}/wabt-${WABT_VERSION}-ubuntu.tar.gz && \
     tar -xf wabt-${WABT_VERSION}-ubuntu.tar.gz && \
@@ -50,3 +51,9 @@ RUN curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/i
     curl https://wasmtime.dev/install.sh -sSf | bash
     
 RUN rustup target add wasm32-wasi
+
+# ------------------------------------
+# Install the Suborbital CLI
+# ------------------------------------
+RUN brew tap suborbital/subo && \
+    brew install subo

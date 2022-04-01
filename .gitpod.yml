@@ -6,31 +6,9 @@ tasks:
   - name: initialize
     before: |
 
-      # ------------------------------------
-      # GoLang
-      # ------------------------------------
-
-      #source /home/gitpod/.gvm/scripts/gvm
-      #gvm use go1.17.5
-
-      #sudo echo "source /home/gitpod/.gvm/scripts/gvm" >> $HOME/.bashrc
-      #sudo echo "gvm use go1.17.5" >> $HOME/.bashrc
-
-      # ------------------------------------
-      # Mkcert
-      # ------------------------------------
-      sudo apt-get update
-      sudo apt install libnss3-tools -y
-      brew install mkcert
-
+      echo "🚀"
 
     init: |
-
-      # ------------------------------------
-      # Install the Suborbital CLI
-      # ------------------------------------
-      brew tap suborbital/subo
-      brew install subo
       
       # ------------------------------------
       # Install sat
@@ -43,24 +21,14 @@ tasks:
       rm -rf sat
 
       # ------------------------------------
-      # Install Venusia Registry 
-      # (with samples)
+      # Build Venusia Registry 
       # ------------------------------------
-      git clone --depth=1 https://github.com/bots-garden/venusia.git
       cd venusia
       go build
 
       cd certs
       ./generate.sh
       cd ../..
-
-      # ------------------------------------
-      # Install Galago Wasm Executor
-      # ------------------------------------
-      #git clone --depth=1 https://gitlab.com/k33g_org/side-projects/galago/galago-executor.git
-      #cd galago-executor
-      #go build
-      #cd ..
 
 ports:
   - port: 8080

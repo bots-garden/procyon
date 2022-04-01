@@ -25,6 +25,8 @@ type ErrResponse struct {
 	Message string
 }
 
+var currentHttpPort = settings.GetSettings().Http.Start
+
 /* 📝 Triggered by a curl request
 curl -v --request POST \
   --header 'Content-Type: application/json' \
@@ -53,17 +55,22 @@ func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.R
 		json.NewEncoder(responseWriter).Encode(e)
 		return
 	}
-	// TODO: if taskEvent.WasmFunctionHttpPort empty, give a port
 	// TODO: save the data of the function in a shared place (for alcor)
 
 	functionConfig := task.Config{
 		Executor: taskEvent.Executor,
 		WasmFileName: taskEvent.WasmFileName,
-		WasmFunctionHttpPort: taskEvent.WasmFunctionHttpPort,
+		//WasmFunctionHttpPort: taskEvent.WasmFunctionHttpPort,
+		WasmFunctionHttpPort: currentHttpPort,
 		WasmRegistryUrl: taskEvent.WasmRegistryUrl,
 		FunctionName: taskEvent.FunctionName,
 		FunctionRevision: taskEvent.FunctionRevision,
+		DefaultRevision: taskEvent.DefaultRevision,
+
 	}
+	// TODO: make a table of available ports
+	currentHttpPort+=1
+
 	functionConfig.Initialize(a.Settings)
 
 	functionTask := task.Task{

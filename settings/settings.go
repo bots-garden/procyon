@@ -15,8 +15,10 @@ type Settings struct {
 	Functions struct {
 		WasmFilesDirectory string `json:"wasmFilesDirectory"`
 	} `json:"functions"`
+	Http struct {
+		Start int `json:"start"`
+	}
 }
-
 /*
 {
   "executors": {

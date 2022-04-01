@@ -14,6 +14,7 @@ type TaskEvent struct {
 	WasmRegistryUrl      string
 	FunctionName         string
 	FunctionRevision     string
+	DefaultRevision      bool
 	Timestamp            time.Time // record the time the event was requested
 	//Task      Task
 	//State     State

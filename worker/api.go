@@ -25,6 +25,17 @@ type ErrResponse struct {
 	Message string
 }
 
+/* 📝 Triggered by a curl request
+curl -v --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "executor": 2,
+      "wasmFileName": "hello.wasm",
+      "wasmFunctionHttpPort": 8081,
+      "wasmRegistryUrl": "https://localhost:9999/wasm/download/hello.wasm"
+    }
+  ' http://localhost:9090/tasks
+*/
 func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	data := json.NewDecoder(request.Body)
 	data.DisallowUnknownFields()
@@ -41,7 +52,9 @@ func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.R
 		json.NewEncoder(responseWriter).Encode(e)
 		return
 	}
-
+	// TODO: if taskEvent.WasmFunctionHttpPort empty, give a port
+	// TODO: save the data of the function in a shared place (for alcor)
+	
 	functionConfig := task.Config{
 		Executor: taskEvent.Executor,
 		WasmFileName: taskEvent.WasmFileName,

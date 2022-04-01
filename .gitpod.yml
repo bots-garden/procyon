@@ -23,7 +23,7 @@ tasks:
       # ------------------------------------
       # Build Venusia Registry 
       # ------------------------------------
-      cd venusia
+      cd venusia-registry
       go build
 
       cd certs

@@ -37,6 +37,7 @@ curl -v --request POST \
   ' http://localhost:9090/tasks
 */
 func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	
 	data := json.NewDecoder(request.Body)
 	data.DisallowUnknownFields()
 	taskEvent := task.TaskEvent{}
@@ -54,12 +55,14 @@ func (a *Api) AddTaskHandler(responseWriter http.ResponseWriter, request *http.R
 	}
 	// TODO: if taskEvent.WasmFunctionHttpPort empty, give a port
 	// TODO: save the data of the function in a shared place (for alcor)
-	
+
 	functionConfig := task.Config{
 		Executor: taskEvent.Executor,
 		WasmFileName: taskEvent.WasmFileName,
 		WasmFunctionHttpPort: taskEvent.WasmFunctionHttpPort,
 		WasmRegistryUrl: taskEvent.WasmRegistryUrl,
+		FunctionName: taskEvent.FunctionName,
+		FunctionRevision: taskEvent.FunctionRevision,
 	}
 	functionConfig.Initialize(a.Settings)
 

@@ -12,6 +12,8 @@ type TaskEvent struct {
 	WasmFileName         string
 	WasmFunctionHttpPort int
 	WasmRegistryUrl      string
+	FunctionName         string
+	FunctionRevision     string
 	Timestamp            time.Time // record the time the event was requested
 	//Task      Task
 	//State     State
@@ -22,6 +24,9 @@ type TaskEvent struct {
 {
   "executor": 1,
   "wasmFileName": "hello.wasm",
+	"functionName": "hello",
+	"functionRevision": "default",
+
   "wasmFunctionHttpPort": 8082,
   "wasmRegistryUrl": "https://localhost:9999/hello/hello.wasm"
 }

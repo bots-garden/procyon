@@ -24,6 +24,8 @@ type Config struct {
 	WasmFilePath         string // "./functions/hello.wasm"
 	WasmFunctionHttpPort int
 	WasmRegistryUrl      string // "https://localhost:9999/hello/hello.wasm"
+	FunctionName         string
+	FunctionRevision     string
 	Env  []string // WASM_EXECUTOR_HTTP=9090
 	Args []string // The first argument is the runer
 }

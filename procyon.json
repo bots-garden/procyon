@@ -5,6 +5,9 @@
   },  
   "functions": {
     "wasmFilesDirectory": "./functions"
+  },
+  "http":{
+    "start": 3000
   }
 }
 

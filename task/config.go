@@ -24,8 +24,11 @@ type Config struct {
 	WasmFilePath         string // "./functions/hello.wasm"
 	WasmFunctionHttpPort int
 	WasmRegistryUrl      string // "https://localhost:9999/hello/hello.wasm"
-	Env  []string // WASM_EXECUTOR_HTTP=9090
-	Args []string // The first argument is the runer
+	FunctionName         string
+	FunctionRevision     string
+	DefaultRevision      bool
+	Env                  []string // WASM_EXECUTOR_HTTP=9090
+	Args                 []string // The first argument is the runer
 }
 
 func (config *Config) Initialize(settings settings.Settings) ExecutorType {
@@ -35,8 +38,8 @@ func (config *Config) Initialize(settings settings.Settings) ExecutorType {
 	config.Args = append(config.Args, config.ExecutorPath)
 
 	if config.Executor == Galago {
-		
-		config.WasmFilePath = settings.Functions.WasmFilesDirectory+"/"+config.WasmFileName
+
+		config.WasmFilePath = settings.Functions.WasmFilesDirectory + "/" + config.WasmFileName
 
 		config.ExecutorPath = settings.Executors.GalagoExecutorPath
 
@@ -46,7 +49,7 @@ func (config *Config) Initialize(settings settings.Settings) ExecutorType {
 
 		return Galago
 	}
-	
+
 	if config.Executor == Sat {
 
 		config.WasmFilePath = ""

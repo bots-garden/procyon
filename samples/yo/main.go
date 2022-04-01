@@ -7,7 +7,7 @@ import (
 type Yo struct{}
 
 func (h Yo) Run(input []byte) ([]byte, error) {
-	return []byte("😀 yo, " + string(input)), nil
+	return []byte("😀 yo (from TinyGo), " + string(input)), nil
 }
 
 // initialize runnable, do not edit //

@@ -6,7 +6,7 @@ impl Runnable for Hi {
     fn run(&self, input: Vec<u8>) -> Result<Vec<u8>, RunErr> {
         let in_string = String::from_utf8(input).unwrap();
     
-        Ok(String::from(format!("👋 hi {}", in_string)).as_bytes().to_vec())
+        Ok(String::from(format!("👋 hi {} (from Rust)", in_string)).as_bytes().to_vec())
     }
 }
 

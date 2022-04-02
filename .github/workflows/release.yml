@@ -23,7 +23,7 @@ jobs:
           project_path: "./"
           binary_name: "procyon"
           ldflags: "-s -w"
-          extra_files: LICENSE README.txt procyon.json ./samples/hello/hello.wasm
+          #extra_files: LICENSE README.txt procyon.json ./samples/hello/hello.wasm
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,7 +32,7 @@ jobs:
           project_path: "./alcor-reverse-proxy"
           binary_name: "alcor"
           ldflags: "-s -w"
-          extra_files: ./alcor-reverse-proxy/LICENSE ./alcor-reverse-proxy/README.txt ./alcor-reverse-proxy/alcor.json
+          #extra_files: ./alcor-reverse-proxy/LICENSE ./alcor-reverse-proxy/README.txt ./alcor-reverse-proxy/alcor.json
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,4 +41,4 @@ jobs:
           project_path: "./venusia-registry"
           binary_name: "venusia"
           ldflags: "-s -w"
-          extra_files: ./venusia-registry/LICENSE ./venusia-registry/README.txt
+          #extra_files: ./venusia-registry/LICENSE ./venusia-registry/README.txt

@@ -56,8 +56,6 @@ func proxy(c *gin.Context) {
 
 	functionUrl := procyonDomain+":"+strconv.Itoa(functionsMap[c.Param("function_name")+"-*"].WasmFunctionHttpPort)
 
-	log.Println("🎃", functionUrl)
-
 	remote, err := url.Parse(functionUrl)
 
 	if err != nil {
@@ -104,25 +102,17 @@ func getFunctionsList() {
 	for {
 		resp, err := http.Get(procyonUrl+"/functions")
 		if err != nil {
-			log.Fatalln(err)
-		}
-		// read the response body
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		//Convert the body to type string
-		//sb := string(body)
-		//log.Println("🌍", sb)
+			log.Println(err)
+		} else {
+			// read the response body
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				log.Fatalln(err)
+			}
 
-		// TODO: handle errors
-		json.Unmarshal(body, &functionsMap)
+			json.Unmarshal(body, &functionsMap)
+		}
 
-		/*
-		log.Println("🌕", functionsMap)
-		log.Println("🪐", functionsMap["hello-*"])
-		log.Println(functionsMap["hello-*"].WasmFunctionHttpPort)
-		*/
 	
 		time.Sleep(5 * time.Second)
 	}
@@ -133,7 +123,6 @@ func getFunctionsList() {
 
 func main() {
 
-	
 	go getFunctionsList()
 
 	r := gin.Default()

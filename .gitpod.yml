@@ -50,10 +50,10 @@ ports:
     # Alcor reverse proxy 
   - port: 8080
     visibility: public
-    # Procyon
+# Procyon
   - port: 9090
     visibility: public
-    # Venusia Registry
+# Venusia Registry
   - port: 9999
     visibility: public
 
@@ -65,3 +65,4 @@ vscode:
     - bpruitt-goddard.mermaid-markdown-syntax-highlighting
     - bierner.markdown-mermaid
     - grain-lang.vscode-grain
+    - rust-lang.rust

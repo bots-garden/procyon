@@ -2,6 +2,7 @@
   "recommendations": [
     "golang.go",
     "pkief.material-icon-theme",
-    "grain-lang.vscode-grain"
+    "grain-lang.vscode-grain",
+    "rust-lang.rust"
   ]
 }

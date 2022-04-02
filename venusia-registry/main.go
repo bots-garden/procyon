@@ -49,7 +49,7 @@ func (a *Api) UploadHandler(responseWriter http.ResponseWriter, request *http.Re
 	// TODO: store this part somewhere (and create an API)
 	// TODO: add API to get functions list
 	// TODO: add API to get functions sizes
-	log.Println("📦 uploaded uile:", handler.Filename)
+	log.Println("📦 uploaded file:", handler.Filename)
 	log.Println("📦 file size:", handler.Size)
 	log.Println("🌍 MIME Header:", handler.Header)
 

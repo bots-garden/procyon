@@ -185,14 +185,119 @@ func (a *Api) StopTaskHandler(responseWriter http.ResponseWriter, request *http.
 	
 }
 
+func (a *Api) SwitchTaskRevisionHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	taskId := chi.URLParam(request, "taskID")
+	if taskId == "" {
+		log.Println("😡 no taskId passed in request")
+		responseWriter.WriteHeader(400)
+	}
+
+	idOfTask, _ := uuid.Parse(taskId)
+	_, ok := a.Worker.TasksDb[idOfTask]
+	if !ok {
+		log.Println("😡 no task wit id:", idOfTask, "found")
+		responseWriter.WriteHeader(404)
+	}
+
+	taskWithRevision := a.Worker.TasksDb[idOfTask]
+	taskWithRevision.Config.DefaultRevision = !taskWithRevision.Config.DefaultRevision
+	
+	//taskCopy := *taskWithRevision
+	//taskCopy.ChangeState(task.Completed)
+	
+	log.Println(
+		"💢💢 task:", taskWithRevision.Id, 
+		"revision:",taskWithRevision.Config.FunctionRevision,
+		"defaul revision:", taskWithRevision.Config.DefaultRevision, 
+		"from runner:", taskWithRevision.WasmRunner.RunnerId)
+
+	//a.Worker.AddTask(&taskCopy)
+
+	responseWriter.WriteHeader(200)
+	
+}
+
+func (a *Api) TaskInfoHandler(responseWriter http.ResponseWriter, request *http.Request) {
+
+	taskId := chi.URLParam(request, "taskID")
+	if taskId == "" {
+		log.Println("😡 no taskId passed in request")
+		responseWriter.WriteHeader(400)
+	}
+
+	idOfTask, _ := uuid.Parse(taskId)
+	_, ok := a.Worker.TasksDb[idOfTask]
+	if !ok {
+		log.Println("😡 no task wit id:", idOfTask, "found")
+		responseWriter.WriteHeader(404)
+	}
+
+	taskWithRevision := a.Worker.TasksDb[idOfTask]
+	
+	
+	//taskCopy := *taskWithRevision
+	//taskCopy.ChangeState(task.Completed)
+	
+	log.Println(
+		"💢💢 task:", taskWithRevision.Id, 
+		"revision:",taskWithRevision.Config.FunctionRevision,
+		"defaul revision:", taskWithRevision.Config.DefaultRevision, 
+		"from runner:", taskWithRevision.WasmRunner.RunnerId)
+
+	//a.Worker.AddTask(&taskCopy)
+
+	responseWriter.WriteHeader(200)
+	json.NewEncoder(responseWriter).Encode(taskWithRevision)
+	
+}
+
+func (a *Api) SwitchRevision(responseWriter http.ResponseWriter, request *http.Request) {
+	// r.Put("/{functionName}/{functionRevision}", a.SwitchRevision)
+
+	functionName := chi.URLParam(request, "functionName")
+	if functionName == "" {
+		log.Println("😡 no functionName passed in request")
+		responseWriter.WriteHeader(400)
+	}
+	functionRevision := chi.URLParam(request, "functionRevision")
+	if functionRevision == "" {
+		log.Println("😡 no functionRevision passed in request")
+		responseWriter.WriteHeader(400)
+	}
+	// search the id of the related task
+	for key, element := range a.Worker.TasksDb {
+		if element.Config.FunctionName==functionName && element.Config.FunctionRevision==functionRevision {
+			element.Config.DefaultRevision = !element.Config.DefaultRevision
+
+			log.Println(
+				"🤖 Key:", key, "=>", 
+				"TaskId:", element.Id, 
+				"Function", element.Config.FunctionName, element.Config.FunctionRevision, element.Config.DefaultRevision)
+
+				break;
+		}
+		
+
+  }
+
+	responseWriter.WriteHeader(200)
+	
+}
+
+
 func (a *Api) InitRouter() {
 	a.Settings = settings.GetSettings()
 	a.Router = chi.NewRouter()
 	a.Router.Route("/tasks", func(r chi.Router) {
 		r.Post("/", a.AddTaskHandler)
 		r.Get("/", a.GetTasksListHandler)
+
+		r.Put("/{functionName}/{functionRevision}", a.SwitchRevision) // change the status of the revision 
+
 		r.Route("/{taskID}", func(r chi.Router) {
 			r.Delete("/", a.StopTaskHandler)
+			r.Put("/",a.SwitchTaskRevisionHandler) // change the status of the revision 
+			r.Get("/", a.TaskInfoHandler)
 		})
 	})
 	a.Router.Route("/functions", func(r chi.Router) {

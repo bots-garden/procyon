@@ -113,11 +113,11 @@ func getFunctionsList() {
 			json.Unmarshal(body, &functionsMap)
 		}
 
-	
 		time.Sleep(5 * time.Second)
 	}
 
 }
+
 
 
 

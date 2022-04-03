@@ -37,6 +37,10 @@ func (a *Api) UploadHandler(responseWriter http.ResponseWriter, request *http.Re
 	// Maximum upload of 10 MB files
 	request.ParseMultipartForm(10 << 20)
 
+	// 	log.Println("🎃",request.Body)
+	targetFileName := request.MultipartForm.Value["name"][0]
+	log.Println("📝 target file name:",targetFileName)
+
 	// Get handler for filename, size and headers
 	file, handler, err := request.FormFile("file")
 	if err != nil {
@@ -54,7 +58,8 @@ func (a *Api) UploadHandler(responseWriter http.ResponseWriter, request *http.Re
 	log.Println("🌍 MIME Header:", handler.Header)
 
 	// Create file
-	dst, err := os.Create("./functions/" + handler.Filename)
+	//dst, err := os.Create("./functions/" + handler.Filename)
+	dst, err := os.Create("./functions/" + targetFileName)
 	defer dst.Close()
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
@@ -69,7 +74,8 @@ func (a *Api) UploadHandler(responseWriter http.ResponseWriter, request *http.Re
 		return
 	}
 
-	log.Println("🎉", handler.Filename, "successfully uploaded")
+	//log.Println("🎉", handler.Filename, "successfully uploaded")
+	log.Println("🎉", targetFileName, "successfully uploaded")
 	responseWriter.WriteHeader(201)
 }
 
@@ -93,6 +99,7 @@ func (a *Api) DeleteHandler(responseWriter http.ResponseWriter, request *http.Re
 }
 
 func (a *Api) DownloadHandler(responseWriter http.ResponseWriter, request *http.Request) {
+
 	wasmFile := chi.URLParam(request, "wasmFile")
 	if wasmFile == "" {
 		log.Println("😡 no wasm file name passed in request")
@@ -115,6 +122,7 @@ func (a *Api) DownloadHandler(responseWriter http.ResponseWriter, request *http.
 	responseWriter.WriteHeader(201)
 }
 
+// TODO: improve the output
 func (a *Api) ListHandler(responseWriter http.ResponseWriter, request *http.Request) {
 
 	dir, err := os.Open("./functions")
@@ -193,7 +201,7 @@ func (a *Api) InitRouter() {
 func (a *Api) Start() { // Address???
 	a.InitRouter()
 
-	log.Println("🚀 starting Galago Registry...")
+	log.Println("🚀 starting Venusia Wasm Registry...")
 
 	crt := getEnv("REGISTRY_CRT", "certs/venusia.local.crt")
 	key := getEnv("REGISTRY_KEY", "certs/venusia.local.key")

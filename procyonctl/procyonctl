@@ -1,0 +1,270 @@
+#!/bin/bash
+: '
+---------------------------------------------------
+ Procyon CLI: procyonctl
+---------------------------------------------------
+'
+
+PROCYONCTL_VERSION="0.0.0"
+# ------------------------------------
+# procyonctl
+# ------------------------------------
+eval $(cat $(dirname "$0")/procyon.config)
+
+if [[ "$1" == "version" ]]; then
+  echo "procyonctl v${PROCYONCTL_VERSION}"
+  exit 0
+fi
+
+if [[ "$1" == "help" ]]; then
+  echo "🚧 work in progress"
+  exit 0
+fi
+
+if [[ "$1" == "url" ]]; then
+  echo "🌍 procyon url: ${PROCYON_URL}"
+  exit 0
+fi
+
+: '
+---------------------------------------------------
+ Venusia
+---------------------------------------------------
+Venusia is a kind of wasm modules registry
+Commands:
+- procyonctl venusia publish ../hey/hey.wasm hey 0.0.0
+- procyonctl venusia delete hey v0.0.0
+- procyonctl venusia download hey v0.0.0
+- procyonctl venusia list
+- procyonctl venusia help
+'
+
+
+function venusia_publish() {
+  wasm_file=$1
+  module_name=$2
+  module_version=$3
+  data="${module_name}-${module_version}.wasm"
+  curl -v \
+    -F "file=@${wasm_file}" \
+    -F "name=${data}" \
+    -H "Content-Type: multipart/form-data" \
+    -X POST ${VENUSIA_URL}/wasm/upload
+}
+
+function venusia_delete() {
+  wasm_file=$1
+  curl -v \
+	-X DELETE ${VENUSIA_URL}/wasm/delete/${wasm_file}
+}
+
+function venusia_download() {
+  wasm_file=$1
+  curl ${VENUSIA_URL}/wasm/download/${wasm_file} --output ${wasm_file}
+}
+
+function venusia_modules_list() {
+  curl ${VENUSIA_URL}/wasm/list
+}
+
+if [[ "$1" == "venusia" ]]; then
+
+  if [[ "$2" == "help" ]]; then
+    echo "🚧 work in progress"
+    exit 0
+  fi
+
+
+  if [[ "$2" == "url" ]]; then
+    echo "🌍 venusia url: ${VENUSIA_URL}"
+    exit 0
+  fi
+
+  if [[ "$2" == "publish" ]]; then
+    wasm_file=$3
+    module_name=$4
+    module_version=$5
+    if [[ "$module_version" == "" ]]; then
+      module_version="default"
+    fi
+    venusia_publish ${wasm_file} ${module_name} ${module_version}
+    exit 0
+  fi
+
+  if [[ "$2" == "list" ]]; then
+    venusia_modules_list
+    exit 0
+  fi
+
+
+  if [[ "$2" == "delete" ]]; then
+    module_name=$3
+    module_version=$4
+    venusia_delete ${module_name}-${module_version}.wasm
+    exit 0
+  fi
+
+  if [[ "$2" == "download" ]]; then
+    module_name=$3
+    module_version=$4
+    if [[ "$module_version" == "" ]]; then
+      module_version="default"
+    fi
+    venusia_download ${module_name}-${module_version}.wasm
+    exit 0
+  fi
+
+  echo "🤔 please try again, I don't understand"
+fi
+
+
+: '
+---------------------------------------------------
+ Procyon task
+---------------------------------------------------
+Procyon is a Sat orchestrator
+Commands:
+- procyonctl task deploy hello-v0.0.0.wasm hello rev1
+  procyonctl task deploy hey-v0.0.0.wasm hey rev1
+- procyonctl task list
+- procyonctl task info a6419ab3-fbe4-4f5e-92ea-c832d8869090
+- procyonctl task switch-revision a6419ab3-fbe4-4f5e-92ea-c832d8869090
+- procyonctl task kill a6419ab3-fbe4-4f5e-92ea-c832d8869090
+  TODO: update task list when remove
+- procyonctl task help
+- procyonctl task switch-func-revision hello rev1
+
+'
+
+function procyon_switch_revision() {
+  function_name=$1
+  function_revision=$2
+  url=${ALCOR_URL}/revisions/${function_name}/${function_revision}
+  echo "🍊 ${url}"
+  curl "${ALCOR_URL}/revisions/${function_name}/${function_revision}"; echo ""
+}
+
+function procyon_task_deploy() {
+  wasm_file=$1
+  function_name=$2
+  function_revision=$3
+  curl -v --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{
+      "executor": 1,
+      "wasmFileName": "'"${wasm_file}"'",
+      "wasmRegistryUrl": "'"${VENUSIA_URL}/wasm/download/${wasm_file}"'",
+      "functionName": "'"${function_name}"'",
+      "functionRevision": "'"${function_revision}"'",
+      "defaultRevision": false
+    }
+  ' ${PROCYON_URL}/tasks
+}
+
+if [[ "$1" == "task" ]]; then
+
+  if [[ "$2" == "help" ]]; then
+    echo "🚧 work in progress"
+    exit 0
+  fi
+
+  if [[ "$2" == "list" ]]; then
+    curl ${PROCYON_URL}/tasks
+    exit 0
+  fi
+
+  if [[ "$2" == "kill" ]]; then
+    task_id=$3
+    curl -v --request DELETE ${PROCYON_URL}/tasks/${task_id}
+    exit 0
+  fi
+
+  if [[ "$2" == "info" ]]; then
+    task_id=$3
+    curl -v --request GET ${PROCYON_URL}/tasks/${task_id}
+    exit 0
+  fi
+
+  
+  if [[ "$2" == "switch-revision" ]]; then
+    task_id=$3
+    curl -v --request PUT ${PROCYON_URL}/tasks/${task_id}
+    echo "🌍 ${PROCYON_URL}/tasks/${task_id}"
+    exit 0
+  fi
+
+  if [[ "$2" == "switch-func-revision" ]]; then
+    functionName=$3
+    functionRevision=$4
+    curl -v --request PUT ${PROCYON_URL}/tasks/${functionName}/${functionRevision}
+    echo "🌍 ${PROCYON_URL}/tasks/${functionName}/${functionRevision}"
+    exit 0
+  fi
+
+
+  if [[ "$2" == "deploy" ]]; then
+    wasm_file=$3
+    function_name=$4
+    function_revision=$5
+    procyon_task_deploy ${wasm_file} ${function_name} ${function_revision}
+    exit 0
+  fi
+
+  echo "🤔 please try again, I don't understand"
+fi
+
+
+: '
+---------------------------------------------------
+ Procyon func
+---------------------------------------------------
+Procyon is a Sat orchestrator
+Commands:
+- procyonctl func call hello 'Jane Doe'
+- procyonctl func revision hello rev1 'John Doe'
+- procyonctl func list
+- procyonctl func help
+'
+
+function procyon_func_call() {
+  function_name=$1
+  data=$2
+  curl -X POST -d ${data} ${ALCOR_URL}/functions/${function_name}; echo ""
+}
+
+function procyon_func_call_rev() {
+  function_name=$1
+  function_revision=$2
+  data=$3
+  curl -X POST -d ${data} ${ALCOR_URL}/functions/${function_name}/${function_revision}; echo ""
+}
+
+if [[ "$1" == "func" ]]; then
+
+  if [[ "$2" == "help" ]]; then
+    echo "🚧 work in progress"
+    exit 0
+  fi
+
+  if [[ "$2" == "list" ]]; then
+    curl ${PROCYON_URL}/functions
+    exit 0
+  fi
+
+  if [[ "$2" == "call" ]]; then
+    function_name=$3
+    data=$4
+    procyon_func_call ${function_name} ${data}
+    exit 0
+  fi
+
+  if [[ "$2" == "revision" ]]; then
+    function_name=$3
+    function_revision=$4
+    data=$5
+    procyon_func_call_rev ${function_name} ${function_revision} ${data} 
+    exit 0
+  fi
+
+  echo "🤔 please try again, I don't understand"
+fi

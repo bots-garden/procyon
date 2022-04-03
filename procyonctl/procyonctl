@@ -96,6 +96,7 @@ if [[ "$1" == "venusia" ]]; then
     exit 0
   fi
 
+
   if [[ "$2" == "delete" ]]; then
     module_name=$3
     module_version=$4
@@ -123,12 +124,25 @@ fi
 ---------------------------------------------------
 Procyon is a Sat orchestrator
 Commands:
-- procyonctl task deploy hello.wasm hello rev1
-  procyonctl task deploy hey.wasm hey rev1
+- procyonctl task deploy hello-v0.0.0.wasm hello rev1
+  procyonctl task deploy hey-v0.0.0.wasm hey rev1
 - procyonctl task list
+- procyonctl task info a6419ab3-fbe4-4f5e-92ea-c832d8869090
+- procyonctl task switch-revision a6419ab3-fbe4-4f5e-92ea-c832d8869090
 - procyonctl task kill a6419ab3-fbe4-4f5e-92ea-c832d8869090
+  TODO: update task list when remove
 - procyonctl task help
+- procyonctl task switch-func-revision hello rev1
+
 '
+
+function procyon_switch_revision() {
+  function_name=$1
+  function_revision=$2
+  url=${ALCOR_URL}/revisions/${function_name}/${function_revision}
+  echo "🍊 ${url}"
+  curl "${ALCOR_URL}/revisions/${function_name}/${function_revision}"; echo ""
+}
 
 function procyon_task_deploy() {
   wasm_file=$1
@@ -142,7 +156,7 @@ function procyon_task_deploy() {
       "wasmRegistryUrl": "'"${VENUSIA_URL}/wasm/download/${wasm_file}"'",
       "functionName": "'"${function_name}"'",
       "functionRevision": "'"${function_revision}"'",
-      "defaultRevision": true
+      "defaultRevision": false
     }
   ' ${PROCYON_URL}/tasks
 }
@@ -165,6 +179,29 @@ if [[ "$1" == "task" ]]; then
     exit 0
   fi
 
+  if [[ "$2" == "info" ]]; then
+    task_id=$3
+    curl -v --request GET ${PROCYON_URL}/tasks/${task_id}
+    exit 0
+  fi
+
+  
+  if [[ "$2" == "switch-revision" ]]; then
+    task_id=$3
+    curl -v --request PUT ${PROCYON_URL}/tasks/${task_id}
+    echo "🌍 ${PROCYON_URL}/tasks/${task_id}"
+    exit 0
+  fi
+
+  if [[ "$2" == "switch-func-revision" ]]; then
+    functionName=$3
+    functionRevision=$4
+    curl -v --request PUT ${PROCYON_URL}/tasks/${functionName}/${functionRevision}
+    echo "🌍 ${PROCYON_URL}/tasks/${functionName}/${functionRevision}"
+    exit 0
+  fi
+
+
   if [[ "$2" == "deploy" ]]; then
     wasm_file=$3
     function_name=$4
@@ -184,10 +221,11 @@ fi
 Procyon is a Sat orchestrator
 Commands:
 - procyonctl func call hello 'Jane Doe'
-- procyonctl func callrev hello rev1 'John Doe'
+- procyonctl func revision hello rev1 'John Doe'
 - procyonctl func list
 - procyonctl func help
 '
+
 function procyon_func_call() {
   function_name=$1
   data=$2
@@ -220,7 +258,7 @@ if [[ "$1" == "func" ]]; then
     exit 0
   fi
 
-  if [[ "$2" == "callrev" ]]; then
+  if [[ "$2" == "revision" ]]; then
     function_name=$3
     function_revision=$4
     data=$5

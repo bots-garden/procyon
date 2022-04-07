@@ -45,13 +45,13 @@ Commands:
 
 '
 
-function procyon_switch_revision() {
-  function_name=$1
-  function_revision=$2
-  url=${ALCOR_URL}/revisions/${function_name}/${function_revision}
-  echo "🍊 ${url}"
-  curl "${ALCOR_URL}/revisions/${function_name}/${function_revision}"; echo ""
-}
+#function procyon_switch_revision() {
+#  function_name=$1
+#  function_revision=$2
+#  url=${ALCOR_URL}/revisions/${function_name}/${function_revision}
+#  echo "🍊 ${url}"
+#  curl "${ALCOR_URL}/revisions/${function_name}/${function_revision}"; echo ""
+#}
 
 function procyon_task_deploy() {
   wasm_file=$1
@@ -102,14 +102,13 @@ if [[ "$1" == "task" ]]; then
     exit 0
   fi
 
-  if [[ "$2" == "switch-func-revision" ]]; then
+  if [[ "$2" == "set-default-revision" ]]; then
     functionName=$3
     functionRevision=$4
-    curl -v --request PUT ${PROCYON_URL}/tasks/${functionName}/${functionRevision}
-    echo "🌍 ${PROCYON_URL}/tasks/${functionName}/${functionRevision}"
+    switch=$5
+    curl -v --request PUT ${PROCYON_URL}/revisions/${functionName}/${functionRevision}/default/${switch}
     exit 0
   fi
-
 
   if [[ "$2" == "deploy" ]]; then
     wasm_file=$3

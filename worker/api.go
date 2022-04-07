@@ -104,26 +104,22 @@ func (a *Api) GetTasksListHandler(responseWriter http.ResponseWriter, request *h
 type FunctionRecord struct {
 	WasmFunctionHttpPort int
 	TaskId uuid.UUID
+	DefaultRevision bool
 }
 
-/* This method/route is called by alcor (reverse proxy)
+/* This method/route is called by the reverse proxy
 
 {
-    "hello-*": {
-        "TaskId": "536d4475-7e22-4437-991a-740a8aef290d",
-        "WasmFunctionHttpPort": 3000
-    },
+
     "hello-first": {
         "TaskId": "536d4475-7e22-4437-991a-740a8aef290d",
         "WasmFunctionHttpPort": 3000
+				"DefaultRevision", true
     },
     "hello-orange": {
         "TaskId": "d9dd4be8-a377-4a6f-b87f-7e74cebd9483",
         "WasmFunctionHttpPort": 3004
-    "hey-*": {
-        "TaskId": "2990d84b-2832-46b9-8c97-c5e39928da96",
-        "WasmFunctionHttpPort": 3001
-    },
+		}
     "hey-first": {
         "TaskId": "2990d84b-2832-46b9-8c97-c5e39928da96",
         "WasmFunctionHttpPort": 3001
@@ -143,16 +139,16 @@ func (a *Api) GetFunctionsListHandler(responseWriter http.ResponseWriter, reques
 		functionsMap[element.Config.FunctionName+"-"+element.Config.FunctionRevision] = FunctionRecord{
 			WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
 			TaskId: key,
+			DefaultRevision: element.Config.DefaultRevision,
 		}
-
-		// TODO: add route to change the default revision
-
+		/*
 		if element.Config.DefaultRevision == true {
 			functionsMap[element.Config.FunctionName+"-"+"*"] = FunctionRecord{
 				WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
 				TaskId: key,
 			}
 		}
+		*/
 
 	}
 
@@ -184,7 +180,7 @@ func (a *Api) StopTaskHandler(responseWriter http.ResponseWriter, request *http.
 	responseWriter.WriteHeader(204)
 	
 }
-
+//TODO: 🌺 gardening to do
 func (a *Api) SwitchTaskRevisionHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	taskId := chi.URLParam(request, "taskID")
 	if taskId == "" {
@@ -264,13 +260,30 @@ func (a *Api) SwitchRevision(responseWriter http.ResponseWriter, request *http.R
 		log.Println("😡 no functionRevision passed in request")
 		responseWriter.WriteHeader(400)
 	}
+	switchRevisionValue := chi.URLParam(request, "switch")
+	if switchRevisionValue == "" {
+		log.Println("😡 no switchRevisionValue (on/off) passed in request")
+		responseWriter.WriteHeader(400)
+	}
+
 	// search the id of the related task
 	for key, element := range a.Worker.TasksDb {
+
 		if element.Config.FunctionName==functionName && element.Config.FunctionRevision==functionRevision {
-			element.Config.DefaultRevision = !element.Config.DefaultRevision
+
+			if switchRevisionValue == "on" {
+				element.Config.DefaultRevision = true
+				} else {
+					if switchRevisionValue == "off" {
+						element.Config.DefaultRevision = false
+					} else {
+						// no change
+						log.Println("😡 bad value for switchRevisionValue:", switchRevisionValue)
+					}
+				}
 
 			log.Println(
-				"🤖 Key:", key, "=>", 
+				"🔴🤖 Key:", key, "=>", 
 				"TaskId:", element.Id, 
 				"Function", element.Config.FunctionName, element.Config.FunctionRevision, element.Config.DefaultRevision)
 
@@ -292,17 +305,24 @@ func (a *Api) InitRouter() {
 		r.Post("/", a.AddTaskHandler)
 		r.Get("/", a.GetTasksListHandler)
 
-		r.Put("/{functionName}/{functionRevision}", a.SwitchRevision) // change the status of the revision 
+		//r.Put("/{functionName}/{functionRevision}", a.SwitchRevision) // change the status of the revision 
 
 		r.Route("/{taskID}", func(r chi.Router) {
 			r.Delete("/", a.StopTaskHandler)
-			r.Put("/",a.SwitchTaskRevisionHandler) // change the status of the revision 
+			// change the status of the revision TODO: test
+			r.Put("/",a.SwitchTaskRevisionHandler)  
 			r.Get("/", a.TaskInfoHandler)
 		})
 	})
 	a.Router.Route("/functions", func(r chi.Router) {
 		r.Get("/", a.GetFunctionsListHandler)
 	})
+
+	a.Router.Route("/revisions", func(r chi.Router) {
+		r.Put("/{functionName}/{functionRevision}/default/{switch}", a.SwitchRevision) // change the status of the revision 
+	})
+
+
 }
 
 func (a *Api) Start() { // Address???

@@ -20,16 +20,6 @@ tasks:
       rm -rf sat
 
       # ------------------------------------
-      # Build Venusia Registry 
-      # ------------------------------------
-      cd venusia-registry
-      go build
-
-      cd certs
-      ./generate.sh
-      cd ../..
-
-      # ------------------------------------
       # Build Alcor Reverse-Proxy
       # ------------------------------------
       cd alcor-reverse-proxy

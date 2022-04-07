@@ -48,9 +48,11 @@ func getEnv(key, fallback string) string {
 type FunctionRecord struct {
 	WasmFunctionHttpPort int
 	TaskId uuid.UUID
+	DefaultRevision bool
 }
 
 var functionsMap map[string]FunctionRecord
+var defaultRevisionsMap map[string]FunctionRecord
 
 func proxy(c *gin.Context) {
 
@@ -112,14 +114,11 @@ func getFunctionsList() {
 
 			json.Unmarshal(body, &functionsMap)
 		}
-
+		log.Println("🌍", functionsMap)
 		time.Sleep(5 * time.Second)
 	}
 
 }
-
-
-
 
 func main() {
 

@@ -151,9 +151,33 @@ func (a *Api) GetFunctionsListHandler(responseWriter http.ResponseWriter, reques
 		*/
 
 	}
-
 	json.NewEncoder(responseWriter).Encode(functionsMap)
 }
+
+func (a *Api) GetDefaultRevisionsListHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
+	responseWriter.WriteHeader(200)
+
+	var functionsMap map[string]FunctionRecord
+	functionsMap = make(map[string]FunctionRecord)
+
+	// parse map
+	for key, element := range a.Worker.TasksDb {
+
+		if element.Config.DefaultRevision == true {
+			log.Println("🎃", element.Config.FunctionName)
+			functionsMap[element.Config.FunctionName] = FunctionRecord{
+				WasmFunctionHttpPort: element.Config.WasmFunctionHttpPort,
+				TaskId: key,
+				DefaultRevision: element.Config.DefaultRevision,
+			}
+		}
+		
+	}
+	json.NewEncoder(responseWriter).Encode(functionsMap)
+}
+
+
 
 func (a *Api) StopTaskHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	taskId := chi.URLParam(request, "taskID")
@@ -247,6 +271,7 @@ func (a *Api) TaskInfoHandler(responseWriter http.ResponseWriter, request *http.
 	
 }
 
+// TODO: 🌺 we should use Redis
 func (a *Api) SwitchRevision(responseWriter http.ResponseWriter, request *http.Request) {
 	// r.Put("/{functionName}/{functionRevision}", a.SwitchRevision)
 
@@ -269,6 +294,37 @@ func (a *Api) SwitchRevision(responseWriter http.ResponseWriter, request *http.R
 	// search the id of the related task
 	for key, element := range a.Worker.TasksDb {
 
+		if element.Config.FunctionName==functionName {
+			if element.Config.FunctionRevision==functionRevision {
+				if switchRevisionValue == "on" {
+					element.Config.DefaultRevision = true
+					} else {
+						if switchRevisionValue == "off" {
+							element.Config.DefaultRevision = false
+						} else {
+							// no change
+							log.Println("😡 bad value for switchRevisionValue:", switchRevisionValue)
+						}
+					}
+					log.Println(
+						"🔴🤖 Key:", key, "=>", 
+						"TaskId:", element.Id, 
+						"Function", element.Config.FunctionName, element.Config.FunctionRevision, element.Config.DefaultRevision)
+			} else { // not the revision
+				if switchRevisionValue == "on" {
+					element.Config.DefaultRevision = false
+					} else {
+						if switchRevisionValue == "off" {
+							element.Config.DefaultRevision = true
+						} else {
+							// no change
+							log.Println("😡 bad value for switchRevisionValue:", switchRevisionValue)
+						}
+					}
+			}
+
+		}
+		/*
 		if element.Config.FunctionName==functionName && element.Config.FunctionRevision==functionRevision {
 
 			if switchRevisionValue == "on" {
@@ -289,6 +345,7 @@ func (a *Api) SwitchRevision(responseWriter http.ResponseWriter, request *http.R
 
 				break;
 		}
+		*/
 		
 
   }
@@ -319,6 +376,7 @@ func (a *Api) InitRouter() {
 	})
 
 	a.Router.Route("/revisions", func(r chi.Router) {
+		r.Get("/default",a.GetDefaultRevisionsListHandler)
 		r.Put("/{functionName}/{functionRevision}/default/{switch}", a.SwitchRevision) // change the status of the revision 
 	})
 

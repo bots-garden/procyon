@@ -48,13 +48,15 @@ func getEnv(key, fallback string) string {
 type FunctionRecord struct {
 	WasmFunctionHttpPort int
 	TaskId uuid.UUID
+	DefaultRevision bool
 }
 
 var functionsMap map[string]FunctionRecord
+var defaultRevisionsMap map[string]FunctionRecord
 
 func proxy(c *gin.Context) {
 
-	functionUrl := procyonDomain+":"+strconv.Itoa(functionsMap[c.Param("function_name")+"-*"].WasmFunctionHttpPort)
+	functionUrl := procyonDomain+":"+strconv.Itoa(defaultRevisionsMap[c.Param("function_name")].WasmFunctionHttpPort)
 
 	remote, err := url.Parse(functionUrl)
 
@@ -98,6 +100,7 @@ func proxyRevision(c *gin.Context) {
 }
 
 // TODO: use redis to share the data
+// TODO: empty map?
 func getFunctionsList() {
 	for {
 		resp, err := http.Get(procyonUrl+"/functions")
@@ -113,17 +116,42 @@ func getFunctionsList() {
 			json.Unmarshal(body, &functionsMap)
 		}
 
+		log.Println("🌍", functionsMap)
+
+		time.Sleep(5 * time.Second)
+	}
+
+}
+
+// TODO: use redis to share the data
+// TODO: empty map?
+func getDefaultRevisionsList() {
+	for {
+		resp, err := http.Get(procyonUrl+"/revisions/default")
+		if err != nil {
+			log.Println(err)
+		} else {
+			// read the response body
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			json.Unmarshal(body, &defaultRevisionsMap)
+		}
+
+		log.Println("🌕", defaultRevisionsMap)
+		
 		time.Sleep(5 * time.Second)
 	}
 
 }
 
 
-
-
 func main() {
 
 	go getFunctionsList()
+	go getDefaultRevisionsList()
 
 	r := gin.Default()
 

@@ -49,10 +49,11 @@ ports:
 
 vscode:
   extensions:
-    - wayou.vscode-todo-highlight
     - pkief.material-icon-theme
     - golang.go
-    - bpruitt-goddard.mermaid-markdown-syntax-highlighting
-    - bierner.markdown-mermaid
-    - grain-lang.vscode-grain
     - rust-lang.rust
+    - aaron-bond.better-comments
+    - grain-lang.vscode-grain
+#    - bpruitt-goddard.mermaid-markdown-syntax-highlighting
+#    - bierner.markdown-mermaid
+

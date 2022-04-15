@@ -1,0 +1,12 @@
+[package]
+name = "k33g/forty-two"
+version = "1.0.0"
+description = "wasm module for sat"
+license = "MIT"
+repository = "https://github.com/bots-garden/satellites"
+readme = "README.md"
+
+
+[[module]]
+name = "forty-two"
+source = "forty-two.wasm"

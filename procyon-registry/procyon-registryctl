@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# ------------------------------------
+# procyon-registryctl
+# ------------------------------------
+eval $(cat $(dirname "$0")/procyon-registry.config)
+
+if [[ "$1" == "url" ]]; then
+  echo "🌍 url: ${PROCYON_REGISTRY_URL}"
+  exit 0
+fi
+
+: '
+🚧 this is a work in progress
+
+./procyon-registryctl publish ../samples/satellites/hello-world-1.0.1/hello-world.wasm hello-world 1.0.1
+
+./procyon-registryctl publish ../samples/satellites/hello-world-1.0.2/hello-world.wasm hello-world 1.0.2
+
+./procyon-registryctl publish ../samples/satellites/forty-two/forty-two.wasm forty-two 0.0.0
+'
+if [[ "$1" == "publish" ]]; then
+  filename_source=$2
+  function_name=$3
+  function_version=$4
+
+  curl -F "${function_name}=@${filename_source}" \
+        -H "Content-Type: multipart/form-data" \
+        -X POST ${PROCYON_REGISTRY_URL}/publish/${function_version}
+
+  exit 0
+fi
+
+: '
+🚧 this is a work in progress
+
+./procyon-registryctl download hello-world.1.0.1.wasm
+
+./procyon-registryctl download hello-world.1.0.2.wasm
+
+./procyon-registryctl download forty-two.0.0.0.wasm
+'
+if [[ "$1" == "download" ]]; then
+  file_name=$2
+  # output_file_name
+  curl ${PROCYON_REGISTRY_URL}/get/${file_name} --output ${file_name}
+
+  exit 0
+fi
+
+

@@ -1,0 +1,12 @@
+[package]
+name = "k33g/hello-world"
+version = "1.0.1"
+description = "wasm module for sat"
+license = "MIT"
+repository = "https://github.com/bots-garden/satellites"
+readme = "README.md"
+
+
+[[module]]
+name = "hello-world"
+source = "hello-world.wasm"

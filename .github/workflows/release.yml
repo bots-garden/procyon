@@ -13,6 +13,11 @@ jobs:
         with:
           files: ./procyon-registry
           dest: procyon-registry.zip
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "procyon-registry.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
   releases-matrix:
     name: Release Procyon Binaries
     runs-on: ubuntu-latest

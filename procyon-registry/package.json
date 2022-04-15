@@ -1,0 +1,15 @@
+{
+	"name": "procyon-registry",
+	"version": "1.0.0",
+	"author": "@k33g",
+	"license": "MIT",
+	"dependencies": {
+		"fastify": "^3.19.2",
+		"fastify-formbody": "^5.1.0",
+		"fastify-multipart": "^4.0.7",
+		"fastify-static": "^4.2.2"
+	},
+	"scripts": {
+		"start": "node index.js"
+	}
+}

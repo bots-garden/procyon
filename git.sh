@@ -13,6 +13,11 @@ if [[ "$1" == "save" ]]; then
   message="📝 save $2"
 fi
 
+if [[ "$1" == "update" ]]; then
+  message="📝 update $2"
+fi
+
+
 if [[ "$1" == "gardening" ]]; then
   message="🌺 gardening $2"
 fi

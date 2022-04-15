@@ -48,9 +48,9 @@ Commands:
 #function procyon_switch_revision() {
 #  function_name=$1
 #  function_revision=$2
-#  url=${ALCOR_URL}/revisions/${function_name}/${function_revision}
+#  url=${PROCYON_REVERSE_URL}/revisions/${function_name}/${function_revision}
 #  echo "🍊 ${url}"
-#  curl "${ALCOR_URL}/revisions/${function_name}/${function_revision}"; echo ""
+#  curl "${PROCYON_REVERSE_URL}/revisions/${function_name}/${function_revision}"; echo ""
 #}
 
 function procyon_task_deploy() {
@@ -141,25 +141,25 @@ Commands:
 function procyon_func_post() {
   function_name=$1
   data=$2
-  curl -X POST -d ${data} ${ALCOR_URL}/functions/${function_name}; echo ""
+  curl -X POST -d ${data} ${PROCYON_REVERSE_URL}/functions/${function_name}; echo ""
 }
 
 function procyon_func_post_rev() {
   function_name=$1
   function_revision=$2
   data=$3
-  curl -X POST -d ${data} ${ALCOR_URL}/functions/${function_name}/${function_revision}; echo ""
+  curl -X POST -d ${data} ${PROCYON_REVERSE_URL}/functions/${function_name}/${function_revision}; echo ""
 }
 
 function procyon_func_get() {
   function_name=$1
-  curl ${ALCOR_URL}/functions/${function_name}; echo ""
+  curl ${PROCYON_REVERSE_URL}/functions/${function_name}; echo ""
 }
 
 function procyon_func_get_rev() {
   function_name=$1
   function_revision=$2
-  curl ${ALCOR_URL}/functions/${function_name}/${function_revision}; echo ""
+  curl ${PROCYON_REVERSE_URL}/functions/${function_name}/${function_revision}; echo ""
 }
 
 if [[ "$1" == "func" ]]; then

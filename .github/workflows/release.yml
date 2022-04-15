@@ -29,10 +29,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          project_path: "./alcor-reverse-proxy"
-          binary_name: "alcor"
+          project_path: "./procyon-reverse-proxy"
+          binary_name: "procyon-reverse"
           ldflags: "-s -w"
-          extra_files: ./alcor-reverse-proxy/alcor.json
+          extra_files: ./procyon-reverse-proxy/procyon.json
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

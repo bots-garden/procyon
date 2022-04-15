@@ -1,4 +1,4 @@
-module github.com/procyon/alcor
+module github.com/bots-garden/procyon/procyon-reverse
 
 go 1.17
 

@@ -24,7 +24,7 @@ var procyonUrl = getSettings().ProcyonUrl
 var procyonDomain = getSettings().ProcyonDomain
 
 func getSettings() Settings {
-	settingsFile, err := ioutil.ReadFile("./alcor.json")
+	settingsFile, err := ioutil.ReadFile("./procyon-reverse.json")
 	if err != nil {
 		log.Fatal(err)
 	}

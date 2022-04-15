@@ -36,10 +36,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          project_path: "./"
-          binary_name: "procyon"
+          project_path: "./procyon-launcher"
+          binary_name: "procyon-launcher"
           ldflags: "-s -w"
-          extra_files: procyon.json ./procyonctl/procyonctl ./procyonctl/procyonctl.config
+          extra_files: ./procyon-launcher/procyon-launcher.json ./procyonctl/procyonctl ./procyonctl/procyonctl.config
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

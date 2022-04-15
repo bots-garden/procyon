@@ -5,6 +5,14 @@ on:
     types: [created]
 
 jobs:
+  zip-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: papeloto/action-zip@v1
+        with:
+          files: ./procyon-registry
+          dest: procyon-registry.zip
   releases-matrix:
     name: Release Procyon Binaries
     runs-on: ubuntu-latest
@@ -23,7 +31,7 @@ jobs:
           project_path: "./"
           binary_name: "procyon"
           ldflags: "-s -w"
-          extra_files: procyon.json ./procyonctl/procyonctl ./procyonctl/procyon.config
+          extra_files: procyon.json ./procyonctl/procyonctl ./procyonctl/procyonctl.config
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,12 +40,5 @@ jobs:
           project_path: "./procyon-reverse-proxy"
           binary_name: "procyon-reverse"
           ldflags: "-s -w"
-          extra_files: ./procyon-reverse-proxy/procyon.json
-  zip-files:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: papeloto/action-zip@v1
-        with:
-          files: ./procyon-registry
-          dest: procyon-registry.zip
+          extra_files: ./procyon-reverse-proxy/procyon-reverse.json
+

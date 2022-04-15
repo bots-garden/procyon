@@ -20,14 +20,16 @@ tasks:
       rm -rf sat
 
       # ------------------------------------
-      # Build Alcor Reverse-Proxy
+      # Build Procyon Reverse-Proxy
       # ------------------------------------
-      cd alcor-reverse-proxy
+      cd procyon-reverse-proxy
       go build
 
-      cd certs
-      ./generate.sh
-      cd ../..
+      #cd certs
+      #./generate.sh
+      #cd ../..
+      
+      cd ..
 
       # ------------------------------------
       # Build Procyon

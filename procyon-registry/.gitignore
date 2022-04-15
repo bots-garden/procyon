@@ -1,4 +1,3 @@
-procyon-registry
 functions/*.wasm
 node_modules
 *.wasm

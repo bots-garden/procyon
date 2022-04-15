@@ -3,7 +3,7 @@
 # ------------------------------------
 # procyon-registry
 # ------------------------------------
-eval $(cat $(dirname "$0")/procyon-registry.config)
+eval $(cat $(dirname "$0")/procyon-registryctl.config)
 
 if [[ "$1" == "url" ]]; then
   echo "🌍 url: ${PROCYON_REGISTRY_URL}"

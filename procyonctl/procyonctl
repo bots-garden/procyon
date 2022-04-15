@@ -9,7 +9,7 @@ PROCYONCTL_VERSION="0.0.1"
 # ------------------------------------
 # procyonctl
 # ------------------------------------
-eval $(cat $(dirname "$0")/procyon.config)
+eval $(cat $(dirname "$0")/procyonctl.config)
 
 if [[ "$1" == "version" ]]; then
   echo "procyonctl v${PROCYONCTL_VERSION}"

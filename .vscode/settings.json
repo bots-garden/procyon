@@ -7,7 +7,11 @@
   "go.gopath": "/home/gitpod/.gvm/pkgsets/go1.17.5/global",
   "gopls": {
     "experimentalWorkspaceModule": true,
+    "verboseOutput": true
   },
+  "go.languageServerFlags": [
+    "-rpc.trace"
+  ],
   "go.toolsEnvVars": {
     "GOOS": "linux",
     "GOARCH": "amd64",
@@ -16,3 +20,4 @@
   "terminal.integrated.defaultProfile.linux": "bash",
   "task.autoDetect": "on",
 }
+

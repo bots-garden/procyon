@@ -58,7 +58,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.procyon-cli.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "./.procyon-cli.yaml", "config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -67,6 +67,7 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -79,6 +80,8 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".procyon-cli")
+
+		
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

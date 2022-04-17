@@ -17,7 +17,14 @@ var publishCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("🚢 publishing the wasm file", args)
-	
+		
+		// jokeTerm, _ := cmd.Flags().GetString("term")
+
+		pathToWasmFile, _ := cmd.Flags().GetString("path")
+		serviceName, _ := cmd.Flags().GetString("service")
+		wasmModuleVersion, _ := cmd.Flags().GetString("version")
+
+		fmt.Println("📝", pathToWasmFile, "⛎", serviceName, "📦", wasmModuleVersion)
 		
 		//  go run main.go registry publish --path toto.wasm --service heyToto --version 1.2.3
 	},

@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // urlCmd represents the url command
@@ -16,7 +17,14 @@ var urlCmd = &cobra.Command{
 	Short: "Display the URL of the Procyon Registry",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("🌍 https://somewhere.else")
+    
+
+		fmt.Println("🌍", viper.Get("procyon-registry.url"))
+		//fmt.Println(viper.Get("procyon-registry"))
+		//fmt.Println(viper.Get("procyon-registry.url"))
+
+		//  go run main.go registry url 
+
 	},
 }
 

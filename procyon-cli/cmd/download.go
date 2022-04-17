@@ -21,15 +21,15 @@ var downloadCmd = &cobra.Command{
 }
 
 func init() {
+
+	var wasmFileName string
+	var pathToWasmFileOutput string
+
 	registryCmd.AddCommand(downloadCmd)
 
-	// Here you will define your flags and configuration settings.
+	publishCmd.Flags().StringVarP(&wasmFileName, "wasm", "w", "", "Wasm file name (required)")
+	publishCmd.MarkFlagRequired("wasm")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// downloadCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// downloadCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	publishCmd.Flags().StringVarP(&pathToWasmFileOutput, "output", "o", "", "Output wasm file path (required)")
+	publishCmd.MarkFlagRequired("output")
 }

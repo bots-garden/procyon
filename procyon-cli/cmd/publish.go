@@ -7,26 +7,50 @@ package cmd
 import (
 	"fmt"
 
+	resty "github.com/go-resty/resty/v2"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// publishCmd represents the publish command
+/* 
+publishCmd represents the publish command. 
+Publish a wasm file to the Procyon Registry
+
+go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
+*/
 var publishCmd = &cobra.Command{
 	Use:   "publish",
 	Short: "Publish a wasm file to the Procyon Registry",
-	Long: ``,
+	Long: `Publish a wasm file to the Procyon Registry:
+procyon-cli registry publish \
+--path ../samples/satellites/forty-two/forty-two.wasm \
+--service forty-two \
+--version 0.0.0
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("🚢 publishing the wasm file", args)
 		
-		// jokeTerm, _ := cmd.Flags().GetString("term")
-
 		pathToWasmFile, _ := cmd.Flags().GetString("path")
 		serviceName, _ := cmd.Flags().GetString("service")
 		wasmModuleVersion, _ := cmd.Flags().GetString("version")
 
 		fmt.Println("📝", pathToWasmFile, "⛎", serviceName, "📦", wasmModuleVersion)
+		fmt.Println("🌍", viper.Get("procyon-registry.url"))
+
+		//  go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
+
+		client := resty.New()
+
+		resp, err := client.R().
+			SetFile(serviceName, pathToWasmFile).
+			Post(viper.GetString("procyon-registry.url")+"/publish/"+wasmModuleVersion)
 		
-		//  go run main.go registry publish --path toto.wasm --service heyToto --version 1.2.3
+		if err != nil {
+			fmt.Println("😡", err)
+		} else {
+			fmt.Println("🙂", resp.RawResponse)
+		}
+
 	},
 }
 
@@ -38,7 +62,6 @@ func init() {
 
 	registryCmd.AddCommand(publishCmd)
 
-	
 	publishCmd.Flags().StringVarP(&pathToWasmFile, "path", "p", "", "Path to wasm file (required)")
 	publishCmd.MarkFlagRequired("path")
 
@@ -48,15 +71,5 @@ func init() {
 	publishCmd.Flags().StringVarP(&wasmModuleVersion, "version", "v", "", "Wasm module version (required)")
 	publishCmd.MarkFlagRequired("version")
 
-	//fmt.Println(pathToWasmFile, serviceName, wasmModuleVersion)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// publishCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// publishCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

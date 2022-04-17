@@ -9,13 +9,15 @@ tasks:
 
     init: |
       
+      go install github.com/spf13/cobra-cli@latest
+
       # ------------------------------------
       # Install sat
       # ------------------------------------
       git clone https://github.com/suborbital/sat.git
       cd sat
       make sat
-      cp .bin/sat ../executors
+      cp .bin/sat ../procyon-launcher/executors
       cd ..
       rm -rf sat
 
@@ -42,6 +44,8 @@ tasks:
       cd procyon-registry
       npm install
       cd certs; ./generate.sh; cd ../..
+
+
 
 
 ports:

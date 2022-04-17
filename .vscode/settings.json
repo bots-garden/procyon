@@ -2,7 +2,7 @@
   "workbench.iconTheme": "material-icon-theme",
   "editor.disableMonospaceOptimizations": true,
   "editor.fontSize": 15,
-   "workbench.colorTheme": "Apollo Midnight",
+   "workbench.colorTheme": "Cobalt2",
   "go.goroot": "/home/gitpod/.gvm/gos/go1.17.5",
   "go.gopath": "/home/gitpod/.gvm/pkgsets/go1.17.5/global",
   "gopls": {

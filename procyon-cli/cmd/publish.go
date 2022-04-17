@@ -37,7 +37,11 @@ procyon-cli registry publish \
 		fmt.Println("📝", pathToWasmFile, "⛎", serviceName, "📦", wasmModuleVersion)
 		fmt.Println("🌍", viper.Get("procyon-registry.url"))
 
-		//  go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
+		/*
+		go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
+		go run main.go registry publish --path ../samples/satellites/hello-world-1.0.1/hello-world.wasm --service hello-world --version 1.0.1
+		go run main.go registry publish --path ../samples/satellites/hello-world-1.0.2/hello-world.wasm --service hello-world --version 1.0.2
+		*/
 
 		client := resty.New()
 

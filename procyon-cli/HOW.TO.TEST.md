@@ -46,18 +46,51 @@ PROXY_HTTP=8080 ./procyon-reverse
 ## Deploy Wasm modules/functions
 
 ```bash
-go run main.go deploy \
+go run main.go functions deploy \
   --wasm hello-world.1.0.1.wasm \
   --function hello-world \
   --revision rev1
 
-go run main.go deploy \
+go run main.go functions deploy \
   --wasm hello-world.1.0.2.wasm \
   --function hello-world \
   --revision rev2
 
-go run main.go deploy \
+go run main.go functions deploy \
   --wasm forty-two.0.0.0.wasm \
   --function forty-two \
   --revision rev1
+```
+
+## Call functions
+
+```bash
+go run main.go functions call \
+  --function hello-world \
+  --revision rev1 \
+  --method GET
+
+go run main.go functions call \
+  --function hello-world \
+  --method GET
+
+go run main.go functions revision \
+	--function hello-world \
+	--revision rev1 \
+	--switch on
+
+go run main.go functions revision \
+	--function hello-world \
+	--revision rev2 \
+	--switch on
+
+go run main.go functions call \
+  --function hello-world \
+  --revision rev2 \
+  --method GET
+
+go run main.go functions call \
+  --function forty-two \
+  --revision rev1 \
+  --method GET
 ```

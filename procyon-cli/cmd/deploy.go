@@ -18,13 +18,13 @@ var deployCmd = &cobra.Command{
 	Short: "Deploy a function (wasm module) to the Procyon Launcher",
 	Long: `Deploy a function (wasm module) to the Procyon Launcher:
 # With wapm.io:
-procyon-cli deploy \
+procyon-cli functions deploy \
 --wasm k33g/hello-world/1.0.1/hello-world.wasm \
 --function hello-world \
 --revision rev1
 
 # With Procyon Registry:
-procyon-cli deploy \
+procyon-cli functions deploy \
 --wasm hello-world.1.0.1.wasm \
 --function hello-world \
 --revision rev1
@@ -41,20 +41,20 @@ procyon-cli deploy \
 
 		/*
 			# wapm.io
-			go run main.go deploy
+			go run main.go functions deploy
 				--wasm k33g/hello-world/1.0.1/hello-world.wasm
 				--function hello-world
 				--revision rev1
 
 			# procyon registry
-			go run main.go deploy
+			go run main.go functions deploy
 				--wasm hello-world.1.0.1.wasm
 				--function hello-world
 				--revision rev1
 		*/
 
 		body := map[string]interface{}{
-			"executor":         1,
+			"executor":         1, // I plan to be able to deploy other kinds of Runnables Launchers (1==Sat)
 			"defaultRevision":  false,
 			"wasmFileName":     urlToWasmFile,
 			"wasmRegistryUrl":  viper.GetString("wasm-registry.url") + "/" + urlToWasmFile,
@@ -71,7 +71,9 @@ procyon-cli deploy \
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			fmt.Println("🙂", resp.RawResponse)
+			fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
+
+			fmt.Println("🌍", functionName, "["+revisionName+"]",":", viper.GetString("procyon-reverse.url")+"/functions/"+functionName+"/"+revisionName)
 		}
 
 	},
@@ -83,7 +85,7 @@ func init() {
 	var revisionName string
 	//var wasmModuleVersion string included in urlToWasmFile
 
-	rootCmd.AddCommand(deployCmd)
+	functionsCmd.AddCommand(deployCmd)
 
 	deployCmd.Flags().StringVarP(&urlToWasmFile, "wasm", "w", "", "Path(URL) to wasm module (required)")
 	deployCmd.MarkFlagRequired("wasm")

@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-/* 
-publishCmd represents the publish command. 
+/*
+publishCmd represents the publish command.
 Publish a wasm file to the Procyon Registry
 
 go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
@@ -24,31 +24,31 @@ var publishCmd = &cobra.Command{
 	Long: `Publish a wasm file to the Procyon Registry:
 procyon-cli registry publish \
 --path ../samples/satellites/forty-two/forty-two.wasm \
---service forty-two \
+--function forty-two \
 --version 0.0.0
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("🚢 publishing the wasm file", args)
-		
+
 		pathToWasmFile, _ := cmd.Flags().GetString("path")
-		serviceName, _ := cmd.Flags().GetString("service")
+		functionName, _ := cmd.Flags().GetString("function")
 		wasmModuleVersion, _ := cmd.Flags().GetString("version")
 
-		fmt.Println("📝", pathToWasmFile, "⛎", serviceName, "📦", wasmModuleVersion)
+		fmt.Println("📝", pathToWasmFile, "⛎", functionName, "📦", wasmModuleVersion)
 		fmt.Println("🌍", viper.Get("procyon-registry.url"))
 
 		/*
-		go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --service forty-two --version 0.0.0
-		go run main.go registry publish --path ../samples/satellites/hello-world-1.0.1/hello-world.wasm --service hello-world --version 1.0.1
-		go run main.go registry publish --path ../samples/satellites/hello-world-1.0.2/hello-world.wasm --service hello-world --version 1.0.2
+			go run main.go registry publish --path ../samples/satellites/forty-two/forty-two.wasm --function forty-two --version 0.0.0
+			go run main.go registry publish --path ../samples/satellites/hello-world-1.0.1/hello-world.wasm --function hello-world --version 1.0.1
+			go run main.go registry publish --path ../samples/satellites/hello-world-1.0.2/hello-world.wasm --function hello-world --version 1.0.2
 		*/
 
 		client := resty.New()
 
 		resp, err := client.R().
-			SetFile(serviceName, pathToWasmFile).
-			Post(viper.GetString("procyon-registry.url")+"/publish/"+wasmModuleVersion)
-		
+			SetFile(functionName, pathToWasmFile).
+			Post(viper.GetString("procyon-registry.url") + "/publish/" + wasmModuleVersion)
+
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
@@ -59,9 +59,9 @@ procyon-cli registry publish \
 }
 
 func init() {
-	
+
 	var pathToWasmFile string
-	var serviceName string
+	var functionName string
 	var wasmModuleVersion string
 
 	registryCmd.AddCommand(publishCmd)
@@ -69,11 +69,10 @@ func init() {
 	publishCmd.Flags().StringVarP(&pathToWasmFile, "path", "p", "", "Path to wasm file (required)")
 	publishCmd.MarkFlagRequired("path")
 
-	publishCmd.Flags().StringVarP(&serviceName, "service", "s", "", "Service name (required)")
-	publishCmd.MarkFlagRequired("service")
+	publishCmd.Flags().StringVarP(&functionName, "function", "f", "", "Function name (required)")
+	publishCmd.MarkFlagRequired("function")
 
 	publishCmd.Flags().StringVarP(&wasmModuleVersion, "version", "v", "", "Wasm module version (required)")
 	publishCmd.MarkFlagRequired("version")
-
 
 }

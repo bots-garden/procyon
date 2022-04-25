@@ -49,6 +49,17 @@ jobs:
           binary_name: "procyon-reverse"
           ldflags: "-s -w"
           extra_files: ./procyon-reverse-proxy/procyon-reverse.json
+
+  releases-matrix-cli:
+    name: Release Procyon Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/amd64
+        goos: [linux]
+        goarch: [amd64]
+    steps:
+      - uses: actions/checkout@v2
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -58,4 +69,3 @@ jobs:
           binary_name: "procyon-cli"
           ldflags: "-s -w"
           extra_files: ./procyon-cli/.procyon-cli.yaml
-

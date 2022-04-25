@@ -3,6 +3,7 @@
 ## Start Procyon Registry
 
 ```bash
+cd procyon-registry
 REGISTRY_CRT="certs/procyon-registry.local.crt" \
 REGISTRY_KEY="certs/procyon-registry.local.key" \
 REGISTRY_HTTP=7070 \
@@ -34,12 +35,14 @@ go run main.go registry publish \
 ## Start Procyon Launcher
 
 ```bash
+cd procyon-launcher
 WASM_WORKER_PORT=9090 ./procyon-launcher
 ```
 
 ## Start Procyon Reverse
 
 ```bash
+cd procyon-reverse-proxy
 PROXY_HTTP=8080 ./procyon-reverse
 ```
 
@@ -93,4 +96,10 @@ go run main.go functions call \
   --function forty-two \
   --revision rev1 \
   --method GET
+```
+
+## Functions List
+
+```bash
+go run main.go functions list
 ```

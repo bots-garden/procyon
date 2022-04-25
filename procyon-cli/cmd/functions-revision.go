@@ -68,27 +68,3 @@ func init() {
 	//revisionCmd.MarkFlagRequired("switch")
 
 }
-
-/*
-  if [[ "$2" == "set-default-revision" ]]; then
-    functionName=$3
-    functionRevision=$4
-    switch=$5
-    curl -v --request PUT ${PROCYON_URL}/revisions/${functionName}/${functionRevision}/default/${switch}
-    exit 0
-
-procyonctl task set-default-revision forty-two rev1 on
-
-#procyonctl task set-default-revision hello-world rev2 on
-
-procyonctl task set-default-revision hello-world rev1 on
-procyonctl task set-default-revision hello-world rev2 on
-
-
-procyonctl task set-default-revision hello-world rev2 off
-
-procyonctl task set-default-revision hello-world rev1 off
-procyonctl task set-default-revision hello-world rev2 on
-
-
-*/

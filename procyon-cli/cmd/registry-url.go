@@ -18,7 +18,6 @@ var urlCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
     
-
 		fmt.Println("🌍", viper.Get("procyon-registry.url"))
 
 

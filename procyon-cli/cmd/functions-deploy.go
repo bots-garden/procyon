@@ -5,7 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
 
 	resty "github.com/go-resty/resty/v2"
 	"github.com/spf13/cobra"
@@ -37,7 +39,7 @@ procyon-cli functions deploy \
 		revisionName, _ := cmd.Flags().GetString("revision")
 
 		fmt.Println("📝", urlToWasmFile, "⛎", functionName, "📦", revisionName)
-		fmt.Println("🌍", viper.Get("wasm-registry.url"))
+		fmt.Println("🌍 registry:", viper.Get("wasm-registry.url"))
 
 		/*
 			# wapm.io
@@ -71,9 +73,22 @@ procyon-cli functions deploy \
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
+			jsonString := resp.String()
+			// Json format
+			//fmt.Println("🙂", resp.StatusCode(), ":", jsonString) 
 
-			fmt.Println("🌍", functionName, "["+revisionName+"]",":", viper.GetString("procyon-reverse.url")+"/functions/"+functionName+"/"+revisionName)
+			var result map[string]interface{}
+			json.Unmarshal([]byte(jsonString), &result)
+
+			config := result["Config"].(map[string]interface{})
+
+			fmt.Println("📦 WasmRegistryUrl:", config["WasmRegistryUrl"].(string))
+			fmt.Println("🌍 WasmFunctionHttpPort:", strconv.FormatFloat(config["WasmFunctionHttpPort"].(float64), 'f', -1, 64))
+			fmt.Println("⛎ FunctionName:", config["FunctionName"].(string))
+			fmt.Println("📝 FunctionRevision:", config["FunctionRevision"].(string), "DefaultRevision:", strconv.FormatBool(config["DefaultRevision"].(bool)))
+
+
+			fmt.Println("🌍", functionName, "["+revisionName+"]", "url:", viper.GetString("procyon-reverse.url")+"/functions/"+functionName+"/"+revisionName)
 		}
 
 	},

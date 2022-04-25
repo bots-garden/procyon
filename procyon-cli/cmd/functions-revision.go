@@ -45,7 +45,7 @@ var revisionCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			fmt.Println("🙂", resp.StatusCode())
+			fmt.Println("🙂 [", resp.StatusCode(), "] default revision of", functionName, "is", revisionName)
 		}
 
 	},

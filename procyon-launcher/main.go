@@ -52,6 +52,7 @@ func main() {
 		go runTasks(&wasmWorker)
 
 		api.Start()
+
 	
 
 }

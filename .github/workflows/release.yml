@@ -39,7 +39,7 @@ jobs:
           project_path: "./procyon-launcher"
           binary_name: "procyon-launcher"
           ldflags: "-s -w"
-          extra_files: ./procyon-launcher/procyon-launcher.json ./procyonctl/procyonctl ./procyonctl/procyonctl.config
+          extra_files: ./procyon-launcher/procyon-launcher.json #./procyonctl/procyonctl ./procyonctl/procyonctl.config
       - uses: wangyoucao577/go-release-action@v1.16
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -49,4 +49,13 @@ jobs:
           binary_name: "procyon-reverse"
           ldflags: "-s -w"
           extra_files: ./procyon-reverse-proxy/procyon-reverse.json
+      - uses: wangyoucao577/go-release-action@v1.16
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          project_path: "./procyon-cli"
+          binary_name: "procyon-cli"
+          ldflags: "-s -w"
+          extra_files: ./procyon-cli/.procyon-cli.yaml
 

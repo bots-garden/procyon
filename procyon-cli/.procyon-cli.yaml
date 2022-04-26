@@ -17,5 +17,6 @@ procyon-launcher:
   url: http://localhost:9090
 
 procyon-reverse:
-  url: http://localhost:8080
+  url: https://localhost:4443
+  #url: http://localhost:8080
 

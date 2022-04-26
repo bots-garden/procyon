@@ -27,10 +27,8 @@ tasks:
       cd procyon-reverse-proxy
       go build
 
-      #cd certs; ./generate.sh; cd ..
+      cd certs; ./generate.sh; cd ../..
       
-      cd ..
-
       # ------------------------------------
       # Build Procyon Launcher
       # ------------------------------------

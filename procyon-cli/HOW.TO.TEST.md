@@ -19,17 +19,20 @@ node index.js
 go run main.go registry publish \
   --path ../samples/satellites/forty-two/forty-two.wasm \
   --function forty-two \
-  --version 0.0.0
+  --version 0.0.0 \
+  --config .procyon-cli.yaml
 
 go run main.go registry publish \
   --path ../samples/satellites/hello-world-1.0.1/hello-world.wasm \
   --function hello-world \
-  --version 1.0.1
+  --version 1.0.1 \
+  --config .procyon-cli.yaml
 
 go run main.go registry publish \
   --path ../samples/satellites/hello-world-1.0.2/hello-world.wasm \
   --function hello-world \
-  --version 1.0.2
+  --version 1.0.2 \
+  --config .procyon-cli.yaml
 ```
 
 ## Start Procyon Launcher
@@ -52,17 +55,20 @@ PROXY_HTTP=8080 ./procyon-reverse
 go run main.go functions deploy \
   --wasm hello-world.1.0.1.wasm \
   --function hello-world \
-  --revision rev1
+  --revision rev1 \
+  --config .procyon-cli.yaml
 
 go run main.go functions deploy \
   --wasm hello-world.1.0.2.wasm \
   --function hello-world \
-  --revision rev2
+  --revision rev2 \
+  --config .procyon-cli.yaml
 
 go run main.go functions deploy \
   --wasm forty-two.0.0.0.wasm \
   --function forty-two \
-  --revision rev1
+  --revision rev1 \
+  --config .procyon-cli.yaml
 ```
 
 ## Call functions
@@ -71,35 +77,42 @@ go run main.go functions deploy \
 go run main.go functions call \
   --function hello-world \
   --revision rev1 \
-  --method GET
+  --method GET \
+  --config .procyon-cli.yaml
 
 go run main.go functions call \
   --function hello-world \
-  --method GET
+  --method GET \
+  --config .procyon-cli.yaml
 
 go run main.go functions revision \
 	--function hello-world \
 	--revision rev1 \
-	--switch on
+	--switch on \
+  --config .procyon-cli.yaml
 
 go run main.go functions revision \
 	--function hello-world \
 	--revision rev2 \
-	--switch on
+	--switch on \
+  --config .procyon-cli.yaml
 
 go run main.go functions call \
   --function hello-world \
   --revision rev2 \
-  --method GET
+  --method GET \
+  --config .procyon-cli.yaml
 
 go run main.go functions call \
   --function forty-two \
   --revision rev1 \
-  --method GET
+  --method GET \
+  --config .procyon-cli.yaml
 ```
 
 ## Functions List
 
 ```bash
-go run main.go functions list
+go run main.go functions list \
+  --config .procyon-cli.yaml
 ```

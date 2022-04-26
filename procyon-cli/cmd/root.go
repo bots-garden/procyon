@@ -36,8 +36,11 @@ var rootCmd = &cobra.Command{
 	Use:   "procyon-cli",
 	Short: "Procyon 🚀 CLI",
 	Long: `Procyon 🚀 CLI
-🚧 this is a work in progress`,
-
+🚧 this is a work in progress
+- The config file is located to $HOME/.procyon-cli
+- Otherwise, you can use the --config flag:
+  > procyon-cli registry url --config .procyon-cli.yaml
+`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -56,7 +59,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", ".procyon-cli.yaml", "config file")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -67,6 +70,7 @@ func init() {
 func initConfig() {
 
 	if cfgFile != "" {
+		//fmt.Println("🎃")
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
@@ -79,7 +83,6 @@ func initConfig() {
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".procyon-cli")
 
-		
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

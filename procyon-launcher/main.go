@@ -45,7 +45,7 @@ func main() {
 		}
 
 
-		api := worker.Api{
+		api := worker.ApiConfig{
 			Address: "", Port: httpPort, Worker: &wasmWorker,
 		}
 

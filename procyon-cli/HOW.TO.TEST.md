@@ -116,3 +116,21 @@ go run main.go functions call \
 go run main.go functions list \
   --config .procyon-cli.yaml
 ```
+
+## Tasks commands
+
+```bash
+go run main.go tasks list \
+  --config .procyon-cli.yaml
+```
+
+```bash
+go run main.go tasks info --task-id 1baa7939-a698-4112-b14d-fb9b35d0fac1 \
+  --config .procyon-cli.yaml
+```
+
+```bash
+go run main.go tasks kill --task-id 1baa7939-a698-4112-b14d-fb9b35d0fac1 \
+  --config .procyon-cli.yaml
+```
+

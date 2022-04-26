@@ -160,5 +160,10 @@ func main() {
 	// 🚧 work in progress
 	r.Any("/functions/:function_name/:function_revision", proxyRevision)
 
-	r.Run(":" + getEnv("PROXY_HTTP", "8080"))
+	if getEnv("PROXY_CRT", "") != "" {
+		r.RunTLS(":" + getEnv("PROXY_HTTPS", "4443"), getEnv("PROXY_CRT", "certs/procyon-registry.local.crt"), getEnv("PROXY_KEY", "certs/procyon-registry.local.key"))
+	} else {
+		r.Run(":" + getEnv("PROXY_HTTP", "8080"))
+	}
+
 }

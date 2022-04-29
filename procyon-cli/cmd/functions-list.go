@@ -37,31 +37,38 @@ var listCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			jsonString := resp.String()
 
-			// Json format
-			//fmt.Println("🙂", resp.StatusCode(),":", jsonString)
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				jsonString := resp.String()
 
-			// Decoding JSON to Maps - Unstructured Data
-			writer := new(tabwriter.Writer)
-			// Format in tab-separated columns with a tab stop of 8.
-			writer.Init(os.Stdout, 0, 8, 0, '\t', 0)
-
-			fmt.Fprintln(writer, "function-rev\ttask-id\tdefault-revision\thttp-port")
-			fmt.Fprintln(writer, "----------------------\t--------------------------------------\t-----------------\t-----------------")
-
-			var result map[string]interface{}
-			json.Unmarshal([]byte(jsonString), &result)
-
-			for key, value := range result {
-				content := value.(map[string]interface{})
-
-				row := key + "\t" + content["TaskId"].(string) + "\t" + strconv.FormatBool(content["DefaultRevision"].(bool)) + "\t" + strconv.FormatFloat(content["WasmFunctionHttpPort"].(float64), 'f', -1, 64)
-
-				fmt.Fprintln(writer, row)
+				// Json format
+				//fmt.Println("🙂", resp.StatusCode(),":", jsonString)
+	
+				// Decoding JSON to Maps - Unstructured Data
+				writer := new(tabwriter.Writer)
+				// Format in tab-separated columns with a tab stop of 8.
+				writer.Init(os.Stdout, 0, 8, 0, '\t', 0)
+	
+				fmt.Fprintln(writer, "function-rev\ttask-id\tdefault-revision\thttp-port")
+				fmt.Fprintln(writer, "----------------------\t--------------------------------------\t-----------------\t-----------------")
+	
+				var result map[string]interface{}
+				json.Unmarshal([]byte(jsonString), &result)
+	
+				for key, value := range result {
+					content := value.(map[string]interface{})
+	
+					row := key + "\t" + content["TaskId"].(string) + "\t" + strconv.FormatBool(content["DefaultRevision"].(bool)) + "\t" + strconv.FormatFloat(content["WasmFunctionHttpPort"].(float64), 'f', -1, 64)
+	
+					fmt.Fprintln(writer, row)
+				}
+				fmt.Fprintln(writer)
+				writer.Flush()
 			}
-			fmt.Fprintln(writer)
-			writer.Flush()
+
 		}
 
 	},

@@ -46,7 +46,14 @@ var revisionCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			fmt.Println("🙂 [", resp.StatusCode(), "] default revision of", functionName, "is", revisionName)
+
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				fmt.Println("🙂 [", resp.StatusCode(), "] default revision of", functionName, "is", revisionName)
+			}
+
 		}
 
 	},

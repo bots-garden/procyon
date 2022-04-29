@@ -74,22 +74,28 @@ procyon-cli functions deploy \
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			jsonString := resp.String()
-			// Json format
-			//fmt.Println("🙂", resp.StatusCode(), ":", jsonString) 
 
-			var result map[string]interface{}
-			json.Unmarshal([]byte(jsonString), &result)
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				jsonString := resp.String()
+				// Json format
+				//fmt.Println("🙂", resp.StatusCode(), ":", jsonString) 
+	
+				var result map[string]interface{}
+				json.Unmarshal([]byte(jsonString), &result)
+	
+				config := result["Config"].(map[string]interface{})
+	
+				fmt.Println("📦 WasmRegistryUrl:", config["WasmRegistryUrl"].(string))
+				fmt.Println("🌍 WasmFunctionHttpPort:", strconv.FormatFloat(config["WasmFunctionHttpPort"].(float64), 'f', -1, 64))
+				fmt.Println("⛎ FunctionName:", config["FunctionName"].(string))
+				fmt.Println("📝 FunctionRevision:", config["FunctionRevision"].(string), "DefaultRevision:", strconv.FormatBool(config["DefaultRevision"].(bool)))
+	
+				fmt.Println("🌍", functionName, "["+revisionName+"]", "url:", viper.GetString("procyon-reverse.url")+"/functions/"+functionName+"/"+revisionName)
+			}
 
-			config := result["Config"].(map[string]interface{})
-
-			fmt.Println("📦 WasmRegistryUrl:", config["WasmRegistryUrl"].(string))
-			fmt.Println("🌍 WasmFunctionHttpPort:", strconv.FormatFloat(config["WasmFunctionHttpPort"].(float64), 'f', -1, 64))
-			fmt.Println("⛎ FunctionName:", config["FunctionName"].(string))
-			fmt.Println("📝 FunctionRevision:", config["FunctionRevision"].(string), "DefaultRevision:", strconv.FormatBool(config["DefaultRevision"].(bool)))
-
-
-			fmt.Println("🌍", functionName, "["+revisionName+"]", "url:", viper.GetString("procyon-reverse.url")+"/functions/"+functionName+"/"+revisionName)
 		}
 
 	},

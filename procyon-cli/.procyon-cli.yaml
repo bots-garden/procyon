@@ -18,6 +18,7 @@ procyon-launcher:
   url: http://localhost:9090
   # protect the procyon launcher API
   admin-token: "ilovepandas"
+  #admin-token: "ilovetigers"
 
 procyon-reverse:
   url: https://localhost:4443

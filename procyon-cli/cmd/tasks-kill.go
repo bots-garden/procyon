@@ -35,8 +35,15 @@ var tasksKillCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			//fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
-			fmt.Println("🙂 [", resp.StatusCode(), "] task", taskId, "is killed")
+
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				//fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
+				fmt.Println("🙂 [", resp.StatusCode(), "] task", taskId, "is killed")
+			}
+
 		}
 
 	},

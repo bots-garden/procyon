@@ -36,25 +36,32 @@ var infoCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			jsonString := resp.String()
-			// Json format
-			//fmt.Println("🙂", resp.StatusCode(),":", jsonString) 
 
-			var result map[string]interface{}
-			json.Unmarshal([]byte(jsonString), &result)
-
-			config := result["Config"].(map[string]interface{})
-
-			// Id  WasmFileName State PreviousState
-			// Config: FunctionName FunctionRevision":DefaultRevision
-			fmt.Println("🙂 [", resp.StatusCode(), "]", result["Id"])
-
-
-			fmt.Println("📦 Task Id:", result["Id"].(string))
-			fmt.Println("📝 Wasm Module:", config["WasmFileName"].(string))
-			fmt.Println("✅ States:", strconv.FormatFloat(result["State"].(float64), 'f', -1, 64) + "|" + strconv.FormatFloat(result["PreviousState"].(float64), 'f', -1, 64))
-
-			fmt.Println("⛎ Function:", config["FunctionName"].(string),  config["FunctionRevision"].(string) + "(" + strconv.FormatBool(config["DefaultRevision"].(bool)) + ")")
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				jsonString := resp.String()
+				// Json format
+				//fmt.Println("🙂", resp.StatusCode(),":", jsonString) 
+	
+				var result map[string]interface{}
+				json.Unmarshal([]byte(jsonString), &result)
+	
+				config := result["Config"].(map[string]interface{})
+	
+				// Id  WasmFileName State PreviousState
+				// Config: FunctionName FunctionRevision":DefaultRevision
+				fmt.Println("🙂 [", resp.StatusCode(), "]", result["Id"])
+	
+	
+				fmt.Println("📦 Task Id:", result["Id"].(string))
+				fmt.Println("📝 Wasm Module:", config["WasmFileName"].(string))
+				fmt.Println("✅ States:", strconv.FormatFloat(result["State"].(float64), 'f', -1, 64) + "|" + strconv.FormatFloat(result["PreviousState"].(float64), 'f', -1, 64))
+	
+				fmt.Println("⛎ Function:", config["FunctionName"].(string),  config["FunctionRevision"].(string) + "(" + strconv.FormatBool(config["DefaultRevision"].(bool)) + ")")
+	
+			}
 
 		}
 	},

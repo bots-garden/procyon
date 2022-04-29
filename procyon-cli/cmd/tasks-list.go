@@ -31,36 +31,43 @@ var tasksListCmd = &cobra.Command{
 		client := resty.New()
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			Get(viper.GetString("procyon-launcher.url") + "/tasks")
 
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			jsonString := resp.String()
-			// Json format
-			//fmt.Println("🙂", resp.StatusCode(),":", jsonString)
 
-			// Decoding JSON to Maps - Unstructured Data
-			writer := new(tabwriter.Writer)
-			// Format in tab-separated columns with a tab stop of 8.
-			writer.Init(os.Stdout, 0, 8, 0, '\t', 0)
-
-			fmt.Fprintln(writer, "task-id\tmodule\tstates\tfunction")
-			fmt.Fprintln(writer, "-------------------------------------\t-------------------------\t------\t----------------------------")
-
-			var result map[string]interface{}
-			json.Unmarshal([]byte(jsonString), &result)
-
-			for key, value := range result {
-				content := value.(map[string]interface{})
-				config := content["Config"].(map[string]interface{})
-
-				row := key + "\t" + config["WasmFileName"].(string) + "\t" + strconv.FormatFloat(content["State"].(float64), 'f', -1, 64) + "|" + strconv.FormatFloat(content["PreviousState"].(float64), 'f', -1, 64) + "\t" + config["FunctionName"].(string) + "\t" + config["FunctionRevision"].(string) + "(" + strconv.FormatBool(config["DefaultRevision"].(bool)) + ")"
-
-				fmt.Fprintln(writer, row)
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				jsonString := resp.String()
+				// Json format
+				//fmt.Println("🙂", resp.StatusCode(),":", jsonString)
+	
+				// Decoding JSON to Maps - Unstructured Data
+				writer := new(tabwriter.Writer)
+				// Format in tab-separated columns with a tab stop of 8.
+				writer.Init(os.Stdout, 0, 8, 0, '\t', 0)
+	
+				fmt.Fprintln(writer, "task-id\tmodule\tstates\tfunction")
+				fmt.Fprintln(writer, "-------------------------------------\t-------------------------\t------\t----------------------------")
+	
+				var result map[string]interface{}
+				json.Unmarshal([]byte(jsonString), &result)
+	
+				for key, value := range result {
+					content := value.(map[string]interface{})
+					config := content["Config"].(map[string]interface{})
+	
+					row := key + "\t" + config["WasmFileName"].(string) + "\t" + strconv.FormatFloat(content["State"].(float64), 'f', -1, 64) + "|" + strconv.FormatFloat(content["PreviousState"].(float64), 'f', -1, 64) + "\t" + config["FunctionName"].(string) + "\t" + config["FunctionRevision"].(string) + "(" + strconv.FormatBool(config["DefaultRevision"].(bool)) + ")"
+	
+					fmt.Fprintln(writer, row)
+				}
+				fmt.Fprintln(writer)
+				writer.Flush()
 			}
-			fmt.Fprintln(writer)
-			writer.Flush()
 
 		}
 

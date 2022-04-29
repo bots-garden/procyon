@@ -40,12 +40,20 @@ var revisionCmd = &cobra.Command{
 
 		client := resty.New()
 		resp, err := client.R().
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			Put(viper.GetString("procyon-launcher.url") + "/revisions/" + functionName + "/" + revisionName + "/default/" + switchValue)
 
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			fmt.Println("🙂 [", resp.StatusCode(), "] default revision of", functionName, "is", revisionName)
+
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				fmt.Println("🙂 [", resp.StatusCode(), "] default revision of", functionName, "is", revisionName)
+			}
+
 		}
 
 	},

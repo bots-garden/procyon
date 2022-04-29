@@ -39,7 +39,7 @@ go run main.go registry publish \
 
 ```bash
 cd procyon-launcher
-WASM_WORKER_PORT=9090 ./procyon-launcher
+PROCYON_WASM_WORKER_PORT=9090 PROCYON_ADMIN_TOKEN="ilovepandas" ./procyon-launcher
 ```
 
 ## Start Procyon Reverse

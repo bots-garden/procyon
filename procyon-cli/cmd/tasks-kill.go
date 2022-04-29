@@ -29,13 +29,21 @@ var tasksKillCmd = &cobra.Command{
 		client := resty.New()
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			Delete(viper.GetString("procyon-launcher.url") + "/tasks/"+taskId)
 
 		if err != nil {
 			fmt.Println("😡", err)
 		} else {
-			//fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
-			fmt.Println("🙂 [", resp.StatusCode(), "] task", taskId, "is killed")
+
+			// eg 401 Unauthorized
+			if resp.IsError() {
+				fmt.Println("😡", resp.Status())
+			} else {
+				//fmt.Println("🙂", resp.StatusCode(),":", resp.String()) // TODO: less verbose
+				fmt.Println("🙂 [", resp.StatusCode(), "] task", taskId, "is killed")
+			}
+
 		}
 
 	},

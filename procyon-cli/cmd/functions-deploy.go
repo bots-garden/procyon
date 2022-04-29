@@ -21,13 +21,13 @@ var deployCmd = &cobra.Command{
 	Long: `Deploy a function (wasm module) to the Procyon Launcher:
 # With wapm.io:
 procyon-cli functions deploy \
---wasm k33g/hello-world/1.0.1/hello-world.wasm \
+--wasm https://registry-cdn.wapm.io/contents/k33g/hello-world/1.0.1/hello-world.wasm \
 --function hello-world \
 --revision rev1
 
 # With Procyon Registry:
 procyon-cli functions deploy \
---wasm hello-world.1.0.1.wasm \
+--wasm https://localhost:7070/get/hey.0.0.0.wasm \
 --function hello-world \
 --revision rev1
 `,
@@ -44,13 +44,13 @@ procyon-cli functions deploy \
 		/*
 			# wapm.io
 			go run main.go functions deploy
-				--wasm k33g/hello-world/1.0.1/hello-world.wasm
+				--wasm https://registry-cdn.wapm.io/contents/k33g/hello-world/1.0.1/hello-world.wasm
 				--function hello-world
 				--revision rev1
 
 			# procyon registry
 			go run main.go functions deploy
-				--wasm hello-world.1.0.1.wasm
+				--wasm https://localhost:7070/get/hello-world.1.0.1.wasm
 				--function hello-world
 				--revision rev1
 		*/
@@ -58,8 +58,9 @@ procyon-cli functions deploy \
 		body := map[string]interface{}{
 			"executor":         1, // I plan to be able to deploy other kinds of Runnables Launchers (1==Sat)
 			"defaultRevision":  false,
-			"wasmFileName":     urlToWasmFile,
-			"wasmRegistryUrl":  viper.GetString("wasm-registry.url") + "/" + urlToWasmFile,
+			//"wasmFileName":     urlToWasmFile,
+			"wasmRegistryUrl":  urlToWasmFile,
+			//"wasmRegistryUrl":  viper.GetString("wasm-registry.url") + "/" + urlToWasmFile,
 			"functionName":     functionName,
 			"functionRevision": revisionName,
 		}
@@ -88,7 +89,7 @@ procyon-cli functions deploy \
 	
 				config := result["Config"].(map[string]interface{})
 	
-				fmt.Println("📦 WasmRegistryUrl:", config["WasmRegistryUrl"].(string))
+				//fmt.Println("📦 WasmRegistryUrl:", config["WasmRegistryUrl"].(string))
 				fmt.Println("🌍 WasmFunctionHttpPort:", strconv.FormatFloat(config["WasmFunctionHttpPort"].(float64), 'f', -1, 64))
 				fmt.Println("⛎ FunctionName:", config["FunctionName"].(string))
 				fmt.Println("📝 FunctionRevision:", config["FunctionRevision"].(string), "DefaultRevision:", strconv.FormatBool(config["DefaultRevision"].(bool)))

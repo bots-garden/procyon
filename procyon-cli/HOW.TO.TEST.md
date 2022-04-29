@@ -53,19 +53,19 @@ PROXY_HTTP=8080 ./procyon-reverse
 
 ```bash
 go run main.go functions deploy \
-  --wasm hello-world.1.0.1.wasm \
+  --wasm https://localhost:7070/get/hello-world.1.0.1.wasm \
   --function hello-world \
   --revision rev1 \
   --config .procyon-cli.yaml
 
 go run main.go functions deploy \
-  --wasm hello-world.1.0.2.wasm \
+  --wasm https://localhost:7070/get/hello-world.1.0.2.wasm \
   --function hello-world \
   --revision rev2 \
   --config .procyon-cli.yaml
 
 go run main.go functions deploy \
-  --wasm forty-two.0.0.0.wasm \
+  --wasm https://localhost:7070/get/forty-two.0.0.0.wasm \
   --function forty-two \
   --revision rev1 \
   --config .procyon-cli.yaml

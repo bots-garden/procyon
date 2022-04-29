@@ -4,14 +4,12 @@
 procyon-registry:
   url: https://localhost:7070
 
-
-
 # if Procyon Registry:
 # url: https://localhost:7070/get
 # if wapm.io Registry:
 # url: https://registry-cdn.wapm.io/contents
-wasm-registry:
-  url: https://localhost:7070/get
+#wasm-registry:
+#  url: https://localhost:7070/get
 
 
 procyon-launcher:

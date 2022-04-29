@@ -33,7 +33,7 @@ func main() {
 
 	// start the registry before
 
-		httpPort := settings.GetEnv("WASM_WORKER_PORT", "9090")
+		httpPort := settings.GetEnv("PROCYON_WASM_WORKER_PORT", "9090")
 
 		log.Println("🚀 starting Wasm worker...")
 
@@ -46,7 +46,10 @@ func main() {
 
 
 		api := worker.ApiConfig{
-			Address: "", Port: httpPort, Worker: &wasmWorker,
+			Address: "", 
+			Port: httpPort, 
+			Worker: &wasmWorker,
+			AdminToken: settings.GetEnv("PROCYON_ADMIN_TOKEN", ""),
 		}
 
 		go runTasks(&wasmWorker)

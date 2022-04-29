@@ -20,16 +20,18 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Get the list of all functions",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		//fmt.Println("📝 functions list")
 
 		/*
 			go run main.go functions list
 		*/
+
 		client := resty.New()
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			Get(viper.GetString("procyon-launcher.url") + "/functions")
 
 		if err != nil {
@@ -44,7 +46,7 @@ var listCmd = &cobra.Command{
 			writer := new(tabwriter.Writer)
 			// Format in tab-separated columns with a tab stop of 8.
 			writer.Init(os.Stdout, 0, 8, 0, '\t', 0)
-			
+
 			fmt.Fprintln(writer, "function-rev\ttask-id\tdefault-revision\thttp-port")
 			fmt.Fprintln(writer, "----------------------\t--------------------------------------\t-----------------\t-----------------")
 
@@ -61,9 +63,10 @@ var listCmd = &cobra.Command{
 			fmt.Fprintln(writer)
 			writer.Flush()
 		}
-		
+
 	},
 }
+
 // ${PROCYON_URL}/functions
 func init() {
 	functionsCmd.AddCommand(listCmd)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/bots-garden/procyon/procyon-launcher/settings"
 	"github.com/bots-garden/procyon/procyon-launcher/task"
@@ -13,10 +14,11 @@ import (
 )
 
 type ApiConfig struct {
-	Address  string
-	Port     string
-	Worker   *Worker
-	Settings settings.Settings
+	Address    string
+	Port       string
+	Worker     *Worker
+	Settings   settings.Settings
+	AdminToken string
 }
 
 //var currentHttpPort = settings.GetSettings().Http.Start
@@ -139,22 +141,56 @@ func (a *ApiConfig) SwitchFunctionRevisionHandler(c *gin.Context) {
 	c.Writer.WriteHeader(200)
 }
 
+func (a *ApiConfig) VerifyAdminToken() gin.HandlerFunc {
+	
+	return func(c *gin.Context) {
+
+		//log.Println("🔶 token", a.AdminToken)
+		if a.AdminToken != "" {
+			//log.Println("🔶 header", c.Request.Header.Get("PROCYON_ADMIN_TOKEN"))
+			if a.AdminToken != c.GetHeader("PROCYON_ADMIN_TOKEN") {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+				return
+			}
+		}
+		c.Next()
+	}
+
+}
+
 func (a *ApiConfig) Start() {
 
 	a.Settings = settings.GetSettings()
 
 	r := gin.Default()
 
-	r.POST("/tasks", a.AddTaskHandler)
-	r.GET("/tasks", a.GetTasksListHandler)
+	r.POST("/tasks",
+		a.VerifyAdminToken(),
+		a.AddTaskHandler)
 
-	r.DELETE("/tasks/:taskID", a.StopTaskHandler)
-	r.GET("/tasks/:taskID", a.GetTaskInfoHandler)
+	r.GET("/tasks",
+		a.VerifyAdminToken(),
+		a.GetTasksListHandler)
 
-	r.GET("/functions", a.GetFunctionsListHandler)
+	r.DELETE("/tasks/:taskID",
+		a.VerifyAdminToken(),
+		a.StopTaskHandler)
 
-	r.GET("/revisions/default", a.GetDefaultRevisionsListHandler)
-	r.PUT("/revisions/:functionName/:functionRevision/default/:switch", a.SwitchFunctionRevisionHandler) // change the status of the revision
+	r.GET("/tasks/:taskID",
+		a.VerifyAdminToken(),
+		a.GetTaskInfoHandler)
+
+	r.GET("/functions",
+		a.VerifyAdminToken(),
+		a.GetFunctionsListHandler)
+
+	r.GET("/revisions/default",
+		a.VerifyAdminToken(),
+		a.GetDefaultRevisionsListHandler)
+
+	r.PUT("/revisions/:functionName/:functionRevision/default/:switch",
+		a.VerifyAdminToken(),
+		a.SwitchFunctionRevisionHandler) // change the status of the revision
 
 	log.Println("🌍 Listening on " + a.Port)
 	r.Run(":" + a.Port)

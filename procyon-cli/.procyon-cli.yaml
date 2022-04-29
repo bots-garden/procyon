@@ -13,8 +13,11 @@ procyon-registry:
 wasm-registry:
   url: https://localhost:7070/get
 
+
 procyon-launcher:
   url: http://localhost:9090
+  # protect the procyon launcher API
+  admin-token: "ilovepandas"
 
 procyon-reverse:
   url: https://localhost:4443

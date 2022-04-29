@@ -67,6 +67,7 @@ procyon-cli functions deploy \
 		client := resty.New()
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			SetBody(body).
 			Post(viper.GetString("procyon-launcher.url") + "/tasks")
 

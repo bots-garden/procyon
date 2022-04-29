@@ -31,6 +31,7 @@ var tasksListCmd = &cobra.Command{
 		client := resty.New()
 		resp, err := client.R().
 			SetHeader("Content-Type", "application/json").
+			SetHeader("PROCYON_ADMIN_TOKEN", viper.GetString("procyon-launcher.admin-token")).
 			Get(viper.GetString("procyon-launcher.url") + "/tasks")
 
 		if err != nil {
